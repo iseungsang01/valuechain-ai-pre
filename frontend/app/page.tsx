@@ -46,7 +46,7 @@ export default function Home() {
         <div className="z-50 rounded-xl border border-red-500/40 bg-red-500/10 px-4 py-3 text-sm text-red-200">
           <strong className="font-semibold">Connection error:</strong> {error}
           {" "}— make sure the FastAPI backend is running at the configured base
-          URL ({process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:8000"}).
+          URL ({process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:9000"}).
         </div>
       )}
 

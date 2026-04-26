@@ -14,7 +14,7 @@ import type {
 } from "@/types";
 
 const BACKEND_BASE_URL =
-  process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:8000";
+  process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:9000";
 
 export type AnalysisStatus =
   | "idle"
