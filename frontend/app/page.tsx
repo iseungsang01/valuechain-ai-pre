@@ -7,23 +7,27 @@ import { ThoughtLog } from "@/components/ThoughtLog";
 import { EdgeDetailPanel } from "@/components/EdgeDetailPanel";
 import { useAgentStream } from "@/hooks/useAgentStream";
 
-const AVAILABLE_QUARTERS = ["2024-Q1", "2024-Q2", "2024-Q3", "2024-Q4"];
+const QUARTERS = ["Q1", "Q2", "Q3", "Q4"] as const;
 
 export default function Home() {
   const [targetNode, setTargetNode] = useState("SK Hynix");
-  const [selectedQuarter, setSelectedQuarter] = useState("2024-Q3");
+  const [year, setYear] = useState(2024);
+  const [quarter, setQuarter] = useState<string>("Q3");
   const [selectedEdgeId, setSelectedEdgeId] = useState<string | null>(null);
   const { status, logs, graph, error, start, stop } = useAgentStream();
 
+  const selectedQuarter = `${year}-${quarter}`;
   const isStreaming = status === "connecting" || status === "streaming";
   const selectedEdge = graph?.edges.find(e => e.id === selectedEdgeId) ?? null;
 
   return (
     <main className="flex h-screen w-full flex-col gap-4 px-6 py-5">
       <ControlBar
-        quarters={AVAILABLE_QUARTERS}
-        selectedQuarter={selectedQuarter}
-        onQuarterChange={setSelectedQuarter}
+        quarters={[...QUARTERS]}
+        year={year}
+        onYearChange={setYear}
+        selectedQuarter={quarter}
+        onQuarterChange={setQuarter}
         targetNode={targetNode}
         onTargetNodeChange={setTargetNode}
         status={status}

@@ -6,6 +6,8 @@ import type { AnalysisStatus } from "@/hooks/useAgentStream";
 
 interface ControlBarProps {
   quarters: string[];
+  year: number;
+  onYearChange: (year: number) => void;
   selectedQuarter: string;
   onQuarterChange: (quarter: string) => void;
   targetNode: string;
@@ -33,6 +35,8 @@ const statusDot: Record<AnalysisStatus, string> = {
 
 export function ControlBar({
   quarters,
+  year,
+  onYearChange,
   selectedQuarter,
   onQuarterChange,
   targetNode,
@@ -76,35 +80,50 @@ export function ControlBar({
         </label>
 
         <div className="flex flex-col gap-1 text-xs text-zinc-400">
-          <span className="font-medium uppercase tracking-wider">Quarter</span>
-          <div className="flex items-center gap-1 rounded-lg border border-white/10 bg-white/5 p-1">
-            {quarters.map((quarter) => {
-              const isActive = quarter === selectedQuarter;
-              return (
-                <button
-                  key={quarter}
-                  type="button"
-                  disabled={isBusy}
-                  onClick={() => onQuarterChange(quarter)}
-                  className={`relative rounded-md px-3 py-1.5 text-xs font-medium transition ${
-                    isActive
-                      ? "text-zinc-950"
-                      : "text-zinc-300 hover:text-zinc-100 disabled:opacity-50"
-                  }`}
-                >
-                  {isActive && (
-                    <motion.span
-                      layoutId="quarter-indicator"
-                      className="absolute inset-0 rounded-md bg-emerald-400"
-                      transition={{ type: "spring", stiffness: 320, damping: 28 }}
-                    />
-                  )}
-                  <span className="relative">{quarter}</span>
-                </button>
-              );
-            })}
+          <span className="font-medium uppercase tracking-wider">Year · Quarter</span>
+          <div className="flex items-center gap-2">
+            <input
+              type="number"
+              value={year}
+              min={1900}
+              max={2999}
+              step={1}
+              disabled={isBusy}
+              onChange={(event) => {
+                const next = parseInt(event.target.value, 10);
+                if (!Number.isNaN(next)) onYearChange(next);
+              }}
+              className="h-9 w-24 rounded-lg border border-white/10 bg-white/5 px-3 text-sm text-zinc-100 outline-none transition focus:border-emerald-400/60 focus:ring-2 focus:ring-emerald-400/20 disabled:cursor-not-allowed disabled:opacity-60"
+            />
+            <div className="flex items-center gap-1 rounded-lg border border-white/10 bg-white/5 p-1">
+              {quarters.map((quarter) => {
+                const isActive = quarter === selectedQuarter;
+                return (
+                  <button
+                    key={quarter}
+                    type="button"
+                    disabled={isBusy}
+                    onClick={() => onQuarterChange(quarter)}
+                    className={`relative rounded-md px-3 py-1.5 text-xs font-medium transition ${
+                      isActive
+                        ? "text-zinc-950"
+                        : "text-zinc-300 hover:text-zinc-100 disabled:opacity-50"
+                    }`}
+                  >
+                    {isActive && (
+                      <motion.span
+                        layoutId="quarter-indicator"
+                        className="absolute inset-0 rounded-md bg-emerald-400"
+                        transition={{ type: "spring", stiffness: 320, damping: 28 }}
+                      />
+                    )}
+                    <span className="relative">{quarter}</span>
+                  </button>
+                );
+              })}
+            </div>
           </div>
-          <span className="text-[10px] text-zinc-500">선택한 분기로 다음 분석 실행</span>
+          <span className="text-[10px] text-zinc-500">선택한 분기로 다음 분석 실행 ({year}-{selectedQuarter})</span>
         </div>
 
         <div className="flex items-center gap-3 lg:pl-3">
