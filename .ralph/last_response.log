@@ -1,0 +1,15 @@
+
+<file path="calc.py">
+class Calculator:
+    def add(self, a, b):
+        return a + b
+    def subtract(self, a, b):
+        return a - b
+</file>
+<file path="test_calc.py">
+from calc import Calculator
+calc = Calculator()
+assert calc.add(2, 3) == 5
+assert calc.subtract(5, 2) == 3
+print("Tests Passed!")
+</file>
