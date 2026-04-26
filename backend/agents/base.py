@@ -1,15 +1,11 @@
 import os
 from google import genai
-from dotenv import load_dotenv
-
-load_dotenv()
 
 class BaseAgent:
-    def __init__(self, role: str):
+    def __init__(self, role: str, client: genai.Client, model_id: str):
         self.role = role
-        # Initialize Gemini 3.1 Pro Client
-        self.client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
-        self.model_id = "gemini-3.1-pro-preview"
+        self.client = client
+        self.model_id = model_id
 
     def prompt_model(self, prompt: str) -> str:
         try:

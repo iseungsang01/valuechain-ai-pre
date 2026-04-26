@@ -1,8 +1,9 @@
+from google import genai
 from .base import BaseAgent
 
 class TechEvaluatorAgent(BaseAgent):
-    def __init__(self):
-        super().__init__(role="TechEvaluator")
+    def __init__(self, client: genai.Client, model_id: str):
+        super().__init__(role="TechEvaluator", client=client, model_id=model_id)
 
     def package_final_report(self, company_name: str, target_year: int, research_facts: str, final_model: str, evaluation_feedback: str = None) -> dict:
         """

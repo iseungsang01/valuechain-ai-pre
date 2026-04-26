@@ -1,9 +1,10 @@
 import json
+from google import genai
 from .base import BaseAgent
 
 class EvaluatorAgent(BaseAgent):
-    def __init__(self):
-        super().__init__(role="Evaluator")
+    def __init__(self, client: genai.Client, model_id: str):
+        super().__init__(role="Evaluator", client=client, model_id=model_id)
 
     def calculate_loss_and_feedback(self, company_name: str, validation_year: int, estimated_model: str, ground_truth_revenue: float) -> dict:
         """

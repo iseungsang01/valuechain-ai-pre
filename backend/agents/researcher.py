@@ -1,12 +1,11 @@
 import requests
 import json
-from typing import List, Dict
-from duckduckgo_search import DDGS
+from google import genai
 from .base import BaseAgent
 
 class ResearcherAgent(BaseAgent):
-    def __init__(self):
-        super().__init__(role="Researcher")
+    def __init__(self, client: genai.Client, model_id: str):
+        super().__init__(role="Researcher", client=client, model_id=model_id)
 
     def search_news_urls(self, query: str, max_results: int = 3) -> List[str]:
         """Finds URLs using DuckDuckGo search."""
