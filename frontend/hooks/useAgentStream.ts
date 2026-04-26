@@ -439,11 +439,27 @@ export function useAgentStream(): UseAgentStreamReturn {
           if (done) break;
           buffer += decoder.decode(value, { stream: true });
 
-          // SSE frames are separated by a blank line (\n\n).
-          let separatorIndex: number;
-          while ((separatorIndex = buffer.indexOf("\n\n")) !== -1) {
-            const frame = buffer.slice(0, separatorIndex);
-            buffer = buffer.slice(separatorIndex + 2);
+          // SSE frames are separated by a blank line (\n\n or \r\n\r\n).
+          while (true) {
+            const idx1 = buffer.indexOf("\n\n");
+            const idx2 = buffer.indexOf("\r\n\r\n");
+            
+            let cutIndex = -1;
+            let sepLen = 0;
+            
+            if (idx1 !== -1 && idx2 !== -1) {
+              if (idx1 < idx2) { cutIndex = idx1; sepLen = 2; }
+              else { cutIndex = idx2; sepLen = 4; }
+            } else if (idx1 !== -1) {
+              cutIndex = idx1; sepLen = 2;
+            } else if (idx2 !== -1) {
+              cutIndex = idx2; sepLen = 4;
+            } else {
+              break;
+            }
+            
+            const frame = buffer.slice(0, cutIndex);
+            buffer = buffer.slice(cutIndex + sepLen);
 
             let eventName = "message";
             const dataLines: string[] = [];
