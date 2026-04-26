@@ -395,3 +395,759 @@ INFO:     127.0.0.1:58093 - "POST /api/analyze HTTP/1.1" 200 OK
 [Estimator] Synthesizing PxQ graph for 2024-Q3 (live=True, sources=39)...
 [Evaluator] Evaluating network consistency for 2024-Q3...
 INFO:     127.0.0.1:51429 - "POST /api/analyze HTTP/1.1" 200 OK
+[DataCollector] Collecting time-bound data for SK하이닉스 in 2024-Q3 (live=True)...
+[DataCollector] Collecting time-bound data for ASML in 2024-Q3 (live=True)...
+[DataCollector] Collecting time-bound data for Tokyo Electron in 2024-Q3 (live=True)...
+[DataCollector] Collecting time-bound data for Lam Research in 2024-Q3 (live=True)...
+[DataCollector] Collecting time-bound data for Applied Materials in 2024-Q3 (live=True)...
+[DataCollector] Collecting time-bound data for Shin-Etsu Chemical in 2024-Q3 (live=True)...
+[DataCollector] Collecting time-bound data for Apple in 2024-Q3 (live=True)...
+[DataCollector] Jina scrape failed for https://kr.investing.com/news/stock-market-news/article-93CH-1242412: HTTPSConnectionPool(host='r.jina.ai', port=443): Read timed out. (read timeout=8)
+[DataCollector] Collecting time-bound data for NVIDIA in 2024-Q3 (live=True)...
+[DataCollector] Collecting time-bound data for Dell Technologies in 2024-Q3 (live=True)...
+[DataCollector] Collecting time-bound data for Hewlett Packard Enterprise in 2024-Q3 (live=True)...
+[DataCollector] Collecting time-bound data for Lenovo in 2024-Q3 (live=True)...
+[Estimator] Synthesizing PxQ graph for 2024-Q3 (live=True, sources=32)...
+INFO:     127.0.0.1:50606 - "POST /api/analyze HTTP/1.1" 200 OK
+[DataCollector] Collecting time-bound data for 한미반도체 in 2024-Q3 (live=True)...
+[DataCollector] Collecting time-bound data for ASMPT in 2024-Q3 (live=True)...
+[DataCollector] Collecting time-bound data for SK Hynix in 2024-Q3 (live=True)...
+[DataCollector] Collecting time-bound data for Micron Technology in 2024-Q3 (live=True)...
+[DataCollector] Jina scrape failed for https://investors.micron.com/quarterly-results: HTTPSConnectionPool(host='r.jina.ai', port=443): Read timed out. (read timeout=8)
+[DataCollector] Jina scrape failed for https://kr.investing.com/equities/hanmi-semicon-earnings: HTTPSConnectionPool(host='r.jina.ai', port=443): Read timed out. (read timeout=8)
+[DataCollector] Jina scrape failed for https://blog.naver.com/stockdiary24/223718732659: HTTPSConnectionPool(host='r.jina.ai', port=443): Read timed out. (read timeout=8)
+[DataCollector] Collecting time-bound data for TSMC in 2024-Q3 (live=True)...
+[DataCollector] No sources for Micron Technology -- Evaluator will flag MISSING_GROUNDING.
+[DataCollector] Jina scrape failed for https://www.inews24.com/view/1900680: HTTPSConnectionPool(host='r.jina.ai', port=443): Read timed out. (read timeout=8)
+[Estimator] Synthesizing PxQ graph for 2024-Q3 (live=True, sources=13)...
+[Estimator] Live estimation failed; falling back to skeleton graph.
+[Evaluator] Evaluating network consistency for 2024-Q3...
+[Evaluator] 5 conflict(s) detected -- preparing feedback prompt...
+[DataCollector] Re-collecting grounding for 5 node(s): ASMPT, 한미반도체, SK Hynix, Micron Technology, TSMC
+[DataCollector] Collecting time-bound data for ASMPT in 2024-Q3 (live=True)...
+[DataCollector] Collecting time-bound data for 한미반도체 in 2024-Q3 (live=True)...
+[DataCollector] Collecting time-bound data for SK Hynix in 2024-Q3 (live=True)...
+[DataCollector] Collecting time-bound data for Micron Technology in 2024-Q3 (live=True)...
+[DataCollector] Collecting time-bound data for TSMC in 2024-Q3 (live=True)...
+[DataCollector] Jina scrape failed for https://kr.investing.com/equities/taiwan-semicond.manufacturing-co-earnings: HTTPSConnectionPool(host='r.jina.ai', port=443): Read timed out. (read timeout=8)
+[Estimator] Regenerating graph for 2024-Q3 after feedback (5 conflict(s); extra_sources=19)...
+[Estimator] Regeneration applied. Feedback excerpt: - Missing verified sources for edge 'ASMPT-한미반도체'. Re-collect from the counter-parties' IR or disclosure pages (prefer O
+[Evaluator] Evaluating network consistency for 2024-Q3...
+INFO:     127.0.0.1:61420 - "OPTIONS /api/analyze HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61420 - "POST /api/analyze HTTP/1.1" 200 OK
+[DataCollector] Collecting time-bound data for 삼성전자 in 2026-Q1 (live=True)...
+[DataCollector] Collecting time-bound data for ASML in 2026-Q1 (live=True)...
+[DataCollector] Collecting time-bound data for Tokyo Electron in 2026-Q1 (live=True)...
+[DataCollector] Collecting time-bound data for Applied Materials in 2026-Q1 (live=True)...
+[DataCollector] Jina scrape failed for https://www.japan-guide.com/blog/koyo25/251119_tokyo.html: HTTPSConnectionPool(host='r.jina.ai', port=443): Read timed out. (read timeout=8)
+[DataCollector] Jina scrape failed for https://www.samsung.com/sec/?msockid=01066dc83fa1691233a27a8f3ee56803: HTTPSConnectionPool(host='r.jina.ai', port=443): Read timed out. (read timeout=8)
+[DataCollector] Jina scrape failed for https://namu.wiki/w/삼성: HTTPSConnectionPool(host='r.jina.ai', port=443): Read timed out. (read timeout=8)
+[DataCollector] Jina scrape failed for https://www.zhihu.com/question/655177357: HTTPSConnectionPool(host='r.jina.ai', port=443): Read timed out. (read timeout=8)
+[DataCollector] Jina scrape failed for https://www.zhihu.com/question/1413725539: HTTPSConnectionPool(host='r.jina.ai', port=443): Read timed out. (read timeout=8)
+[DataCollector] No sources for 삼성전자 -- Evaluator will flag MISSING_GROUNDING.
+[DataCollector] Collecting time-bound data for Samsung Display in 2026-Q1 (live=True)...
+[DataCollector] Jina scrape failed for https://www.zhihu.com/question/58868780: HTTPSConnectionPool(host='r.jina.ai', port=443): Read timed out. (read timeout=8)
+[DataCollector] Jina scrape failed for https://www.zhihu.com/question/545384360: HTTPSConnectionPool(host='r.jina.ai', port=443): Read timed out. (read timeout=8)
+[DataCollector] Jina scrape failed for https://www.zhihu.com/question/665930591: HTTPSConnectionPool(host='r.jina.ai', port=443): Read timed out. (read timeout=8)
+[DataCollector] Jina scrape failed for https://www.zhihu.com/question/2002369149092008294: HTTPSConnectionPool(host='r.jina.ai', port=443): Read timed out. (read timeout=8)
+[DataCollector] No sources for Applied Materials -- Evaluator will flag MISSING_GROUNDING.
+[DataCollector] Collecting time-bound data for SK Hynix in 2026-Q1 (live=True)...
+[DataCollector] No sources for Tokyo Electron -- Evaluator will flag MISSING_GROUNDING.
+[DataCollector] Collecting time-bound data for Apple in 2026-Q1 (live=True)...
+[DataCollector] Collecting time-bound data for Google in 2026-Q1 (live=True)...
+[DataCollector] No sources for SK Hynix -- Evaluator will flag MISSING_GROUNDING.
+[DataCollector] Collecting time-bound data for Dell Technologies in 2026-Q1 (live=True)...
+[DataCollector] Collecting time-bound data for HP Inc. in 2026-Q1 (live=True)...
+[DataCollector] No sources for Samsung Display -- Evaluator will flag MISSING_GROUNDING.
+[DataCollector] Collecting time-bound data for Amazon in 2026-Q1 (live=True)...
+[DataCollector] No sources for HP Inc. -- Evaluator will flag MISSING_GROUNDING.
+[Estimator] Synthesizing PxQ graph for 2026-Q1 (live=True, sources=24)...
+[Estimator] Live estimation failed; falling back to skeleton graph.
+[Evaluator] Evaluating network consistency for 2026-Q1...
+[fx] Frankfurter call failed: 422 Client Error: Unprocessable Entity for url: https://api.frankfurter.dev/v2/rates?base=USD&symbols=KRW&start_date=2026-01-01&end_date=2026-03-31
+[Evaluator] 10 conflict(s) detected -- preparing feedback prompt...
+[DataCollector] Re-collecting grounding for 11 node(s): ASML, 삼성전자, Tokyo Electron, Applied Materials, Samsung Display, SK Hynix, Apple, Google, Dell Technologies, HP Inc., Amazon
+[DataCollector] Collecting time-bound data for ASML in 2026-Q1 (live=True)...
+[DataCollector] Collecting time-bound data for 삼성전자 in 2026-Q1 (live=True)...
+[DataCollector] Collecting time-bound data for Tokyo Electron in 2026-Q1 (live=True)...
+[DataCollector] Collecting time-bound data for Applied Materials in 2026-Q1 (live=True)...
+[DataCollector] Collecting time-bound data for Samsung Display in 2026-Q1 (live=True)...
+[DataCollector] Jina scrape failed for https://www.zhihu.com/question/665930591: HTTPSConnectionPool(host='r.jina.ai', port=443): Read timed out. (read timeout=8)
+[DataCollector] Jina scrape failed for https://www.zhihu.com/question/2002369149092008294: HTTPSConnectionPool(host='r.jina.ai', port=443): Read timed out. (read timeout=8)
+[DataCollector] Jina scrape failed for https://www.zhihu.com/question/58868780: HTTPSConnectionPool(host='r.jina.ai', port=443): Read timed out. (read timeout=8)
+[DataCollector] Jina scrape failed for https://www.zhihu.com/question/545384360: HTTPSConnectionPool(host='r.jina.ai', port=443): Read timed out. (read timeout=8)
+[DataCollector] Jina scrape failed for https://www.zhihu.com/question/1413725539: HTTPSConnectionPool(host='r.jina.ai', port=443): Read timed out. (read timeout=8)
+[DataCollector] Jina scrape failed for https://www.zhihu.com/question/655177357: HTTPSConnectionPool(host='r.jina.ai', port=443): Read timed out. (read timeout=8)
+[DataCollector] Jina scrape failed for https://news.samsungsemiconductor.com/kr/삼성전자-2026년-1분기-잠정실적-발표/: HTTPSConnectionPool(host='r.jina.ai', port=443): Read timed out. (read timeout=8)
+[DataCollector] Collecting time-bound data for SK Hynix in 2026-Q1 (live=True)...
+[DataCollector] No sources for Applied Materials -- Evaluator will flag MISSING_GROUNDING.
+[DataCollector] Collecting time-bound data for Apple in 2026-Q1 (live=True)...
+[DataCollector] No sources for Samsung Display -- Evaluator will flag MISSING_GROUNDING.
+[DataCollector] Collecting time-bound data for Google in 2026-Q1 (live=True)...
+[DataCollector] Jina scrape failed for https://infoarounds.com/samsung-electronics-2026-q1-earnings-analysis/: HTTPSConnectionPool(host='r.jina.ai', port=443): Read timed out. (read timeout=8)
+[DataCollector] Collecting time-bound data for Dell Technologies in 2026-Q1 (live=True)...
+[DataCollector] No sources for SK Hynix -- Evaluator will flag MISSING_GROUNDING.
+[DataCollector] Collecting time-bound data for HP Inc. in 2026-Q1 (live=True)...
+[DataCollector] Collecting time-bound data for Amazon in 2026-Q1 (live=True)...
+[Estimator] Regenerating graph for 2026-Q1 after feedback (10 conflict(s); extra_sources=38)...
+[Estimator] Regeneration applied. Feedback excerpt: - Missing verified sources for edge 'ASML-삼성전자'. Re-collect from the counter-parties' IR or disclosure pages (prefer OFF
+[Evaluator] Evaluating network consistency for 2026-Q1...
+INFO:     127.0.0.1:58001 - "POST /api/analyze HTTP/1.1" 200 OK
+[DataCollector] Collecting time-bound data for LG이노텍 in 2026-Q1 (live=True)...
+[DataCollector] Collecting time-bound data for Samsung Electronics in 2026-Q1 (live=True)...
+[DataCollector] Collecting time-bound data for SK Hynix in 2026-Q1 (live=True)...
+[DataCollector] Collecting time-bound data for Ibiden in 2026-Q1 (live=True)...
+[DataCollector] No sources for Ibiden -- Evaluator will flag MISSING_GROUNDING.
+[DataCollector] Collecting time-bound data for Murata Manufacturing in 2026-Q1 (live=True)...
+[DataCollector] No sources for SK Hynix -- Evaluator will flag MISSING_GROUNDING.
+[DataCollector] Collecting time-bound data for Samsung Electro-Mechanics in 2026-Q1 (live=True)...
+[DataCollector] Collecting time-bound data for Apple in 2026-Q1 (live=True)...
+[DataCollector] No sources for Samsung Electronics -- Evaluator will flag MISSING_GROUNDING.
+[DataCollector] Collecting time-bound data for LG Electronics in 2026-Q1 (live=True)...
+[DataCollector] No sources for Murata Manufacturing -- Evaluator will flag MISSING_GROUNDING.
+[DataCollector] Collecting time-bound data for Tesla in 2026-Q1 (live=True)...
+[DataCollector] Collecting time-bound data for Hyundai Motor Company in 2026-Q1 (live=True)...
+[DataCollector] No sources for LG Electronics -- Evaluator will flag MISSING_GROUNDING.
+[DataCollector] Collecting time-bound data for Magna International in 2026-Q1 (live=True)...
+[DataCollector] No sources for Samsung Electro-Mechanics -- Evaluator will flag MISSING_GROUNDING.
+[DataCollector] No sources for Tesla -- Evaluator will flag MISSING_GROUNDING.
+[DataCollector] No sources for Hyundai Motor Company -- Evaluator will flag MISSING_GROUNDING.
+[DataCollector] No sources for Magna International -- Evaluator will flag MISSING_GROUNDING.
+[Estimator] Synthesizing PxQ graph for 2026-Q1 (live=True, sources=8)...
+[Evaluator] Evaluating network consistency for 2026-Q1...
+INFO:     127.0.0.1:61522 - "POST /api/analyze HTTP/1.1" 200 OK
+[DataCollector] Collecting time-bound data for LG이노텍 in 2025-Q1 (live=True)...
+[DataCollector] Collecting time-bound data for Samsung Electronics in 2025-Q1 (live=True)...
+[DataCollector] Collecting time-bound data for SK Hynix in 2025-Q1 (live=True)...
+[DataCollector] Collecting time-bound data for Murata Manufacturing in 2025-Q1 (live=True)...
+[DataCollector] Jina scrape failed for https://www.murata.com/en-global/ir/library/results: HTTPSConnectionPool(host='r.jina.ai', port=443): Read timed out. (read timeout=8)
+[DataCollector] Jina scrape failed for https://www.zhihu.com/tardis/bd/art/368695562: HTTPSConnectionPool(host='r.jina.ai', port=443): Read timed out. (read timeout=8)
+[DataCollector] Jina scrape failed for https://www.zhihu.com/tardis/bd/art/15231665316: HTTPSConnectionPool(host='r.jina.ai', port=443): Read timed out. (read timeout=8)
+[DataCollector] Jina scrape failed for https://www.zhihu.com/question/9848611894: HTTPSConnectionPool(host='r.jina.ai', port=443): Read timed out. (read timeout=8)
+[DataCollector] No sources for Samsung Electronics -- Evaluator will flag MISSING_GROUNDING.
+[DataCollector] Collecting time-bound data for Ibiden in 2025-Q1 (live=True)...
+[DataCollector] No sources for LG이노텍 -- Evaluator will flag MISSING_GROUNDING.
+[DataCollector] Collecting time-bound data for Texas Instruments in 2025-Q1 (live=True)...
+[DataCollector] Jina scrape failed for https://www.tipranks.com/news/company-announcements/murata-manufacturing-reports-mixed-q1-2025-results: HTTPSConnectionPool(host='r.jina.ai', port=443): Read timed out. (read timeout=8)
+[DataCollector] Jina scrape failed for https://kr.investing.com/equities/murata-mfg-co-financial-summary: HTTPSConnectionPool(host='r.jina.ai', port=443): Read timed out. (read timeout=8)
+[DataCollector] Jina scrape failed for https://www.zhihu.com/topic/19913130/intro: HTTPSConnectionPool(host='r.jina.ai', port=443): Read timed out. (read timeout=8)
+[DataCollector] Jina scrape failed for https://www.zhihu.com/tardis/zm/art/703529588: HTTPSConnectionPool(host='r.jina.ai', port=443): Read timed out. (read timeout=8)
+[DataCollector] Jina scrape failed for https://www.zhihu.com/question/1996662715566031093: HTTPSConnectionPool(host='r.jina.ai', port=443): Read timed out. (read timeout=8)
+[DataCollector] Jina scrape failed for https://www.zhihu.com/question/22008560: HTTPSConnectionPool(host='r.jina.ai', port=443): Read timed out. (read timeout=8)
+[DataCollector] Collecting time-bound data for Apple in 2025-Q1 (live=True)...
+[DataCollector] No sources for Texas Instruments -- Evaluator will flag MISSING_GROUNDING.
+[DataCollector] Collecting time-bound data for LG Electronics in 2025-Q1 (live=True)...
+[DataCollector] Collecting time-bound data for Tesla in 2025-Q1 (live=True)...
+[DataCollector] No sources for SK Hynix -- Evaluator will flag MISSING_GROUNDING.
+[DataCollector] Collecting time-bound data for Ford in 2025-Q1 (live=True)...
+[DataCollector] No sources for LG Electronics -- Evaluator will flag MISSING_GROUNDING.
+[DataCollector] Collecting time-bound data for General Motors in 2025-Q1 (live=True)...
+[DataCollector] No sources for General Motors -- Evaluator will flag MISSING_GROUNDING.
+[Estimator] Synthesizing PxQ graph for 2025-Q1 (live=True, sources=19)...
+[Estimator] Live estimation failed; falling back to skeleton graph.
+[Evaluator] Evaluating network consistency for 2025-Q1...
+[Evaluator] 10 conflict(s) detected -- preparing feedback prompt...
+[DataCollector] Re-collecting grounding for 11 node(s): Samsung Electronics, LG이노텍, SK Hynix, Murata Manufacturing, Ibiden, Texas Instruments, Apple, LG Electronics, Tesla, Ford, General Motors
+[DataCollector] Collecting time-bound data for Samsung Electronics in 2025-Q1 (live=True)...
+[DataCollector] Collecting time-bound data for LG이노텍 in 2025-Q1 (live=True)...
+[DataCollector] Collecting time-bound data for SK Hynix in 2025-Q1 (live=True)...
+[DataCollector] Collecting time-bound data for Murata Manufacturing in 2025-Q1 (live=True)...
+[DataCollector] Jina scrape failed for https://www.skhynix.com/ir-quarterly-results: HTTPSConnectionPool(host='r.jina.ai', port=443): Read timed out. (read timeout=8)
+[DataCollector] Jina scrape failed for https://www.murata.com/en-global/ir/library/results/2025/2025q1: HTTPSConnectionPool(host='r.jina.ai', port=443): Read timed out. (read timeout=8)
+[DataCollector] No sources for Murata Manufacturing -- Evaluator will flag MISSING_GROUNDING.
+[DataCollector] Collecting time-bound data for Ibiden in 2025-Q1 (live=True)...
+[DataCollector] Jina scrape failed for https://www.traveloka.com/vi-vn/flight/to/vancouver.yvr: HTTPSConnectionPool(host='r.jina.ai', port=443): Read timed out. (read timeout=8)
+[DataCollector] News extraction error: 'cp949' codec can't encode character '\xe9' in position 78: illegal multibyte sequence
+[DataCollector] Jina scrape failed for https://www.news1.kr/industry/general-industry/6127410: HTTPSConnectionPool(host='r.jina.ai', port=443): Read timed out. (read timeout=8)
+[DataCollector] No sources for LG이노텍 -- Evaluator will flag MISSING_GROUNDING.
+[DataCollector] Collecting time-bound data for Texas Instruments in 2025-Q1 (live=True)...
+[DataCollector] Collecting time-bound data for Apple in 2025-Q1 (live=True)...
+[DataCollector] Jina scrape failed for https://www.zhihu.com/question/22008560: HTTPSConnectionPool(host='r.jina.ai', port=443): Read timed out. (read timeout=8)
+[DataCollector] Jina scrape failed for https://www.zhihu.com/question/1996662715566031093: HTTPSConnectionPool(host='r.jina.ai', port=443): Read timed out. (read timeout=8)
+[DataCollector] Collecting time-bound data for LG Electronics in 2025-Q1 (live=True)...
+[DataCollector] No sources for SK Hynix -- Evaluator will flag MISSING_GROUNDING.
+[DataCollector] Collecting time-bound data for Tesla in 2025-Q1 (live=True)...
+[DataCollector] No sources for Texas Instruments -- Evaluator will flag MISSING_GROUNDING.
+[DataCollector] Collecting time-bound data for Ford in 2025-Q1 (live=True)...
+[DataCollector] No sources for LG Electronics -- Evaluator will flag MISSING_GROUNDING.
+[DataCollector] Collecting time-bound data for General Motors in 2025-Q1 (live=True)...
+[Estimator] Regenerating graph for 2025-Q1 after feedback (10 conflict(s); extra_sources=17)...
+[Estimator] Regeneration applied. Feedback excerpt: - Missing verified sources for edge 'Samsung Electronics-LG이노텍'. Re-collect from the counter-parties' IR or disclosure p
+[Evaluator] Evaluating network consistency for 2025-Q1...
+INFO:     127.0.0.1:52514 - "OPTIONS /api/analyze HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52514 - "POST /api/analyze HTTP/1.1" 200 OK
+[DataCollector] Collecting time-bound data for LG이노텍 in 2026-Q1 (live=True)...
+[DataCollector] Collecting time-bound data for Samsung Electronics in 2026-Q1 (live=True)...
+[DataCollector] Collecting time-bound data for SK Hynix in 2026-Q1 (live=True)...
+[DataCollector] Collecting time-bound data for Murata Manufacturing in 2026-Q1 (live=True)...
+[DataCollector] No sources for SK Hynix -- Evaluator will flag MISSING_GROUNDING.
+[DataCollector] Collecting time-bound data for Ibiden in 2026-Q1 (live=True)...
+[DataCollector] Collecting time-bound data for Samsung Electro-Mechanics in 2026-Q1 (live=True)...
+[DataCollector] Jina scrape failed for https://www.thevaluenews.co.kr/news/189993: HTTPSConnectionPool(host='r.jina.ai', port=443): Read timed out. (read timeout=8)
+[DataCollector] Jina scrape failed for https://dream-planner.tistory.com/entry/2026-lg-innotek-q1-earnings-release-and-market-analysis: HTTPSConnectionPool(host='r.jina.ai', port=443): Read timed out. (read timeout=8)
+[DataCollector] Jina scrape failed for https://www.lginnotek.com/ir/report.do: HTTPSConnectionPool(host='r.jina.ai', port=443): Read timed out. (read timeout=8)
+[DataCollector] Jina scrape failed for https://www.yahoo.co.jp/: HTTPSConnectionPool(host='r.jina.ai', port=443): Read timed out. (read timeout=8)
+[DataCollector] Jina scrape failed for https://daily.hankooki.com/news/articleView.html?idxno=1361414: HTTPSConnectionPool(host='r.jina.ai', port=443): Read timed out. (read timeout=8)
+[DataCollector] Collecting time-bound data for Apple in 2026-Q1 (live=True)...
+[DataCollector] No sources for Murata Manufacturing -- Evaluator will flag MISSING_GROUNDING.
+[DataCollector] Collecting time-bound data for LG Electronics in 2026-Q1 (live=True)...
+[DataCollector] No sources for Ibiden -- Evaluator will flag MISSING_GROUNDING.
+[DataCollector] Collecting time-bound data for Tesla in 2026-Q1 (live=True)...
+[DataCollector] Collecting time-bound data for Hyundai Motor Company in 2026-Q1 (live=True)...
+[DataCollector] No sources for Samsung Electro-Mechanics -- Evaluator will flag MISSING_GROUNDING.
+[DataCollector] Collecting time-bound data for Microsoft in 2026-Q1 (live=True)...
+[DataCollector] No sources for LG Electronics -- Evaluator will flag MISSING_GROUNDING.
+[DataCollector] No sources for Microsoft -- Evaluator will flag MISSING_GROUNDING.
+[Estimator] Synthesizing PxQ graph for 2026-Q1 (live=True, sources=24)...
+[Estimator] Live estimation failed; falling back to skeleton graph.
+[Evaluator] Evaluating network consistency for 2026-Q1...
+[Evaluator] 10 conflict(s) detected -- preparing feedback prompt...
+[DataCollector] Re-collecting grounding for 11 node(s): Samsung Electronics, LG이노텍, SK Hynix, Murata Manufacturing, Ibiden, Samsung Electro-Mechanics, Apple, LG Electronics, Tesla, Hyundai Motor Company, Microsoft
+[DataCollector] Collecting time-bound data for Samsung Electronics in 2026-Q1 (live=True)...
+[DataCollector] Collecting time-bound data for LG이노텍 in 2026-Q1 (live=True)...
+[DataCollector] Collecting time-bound data for SK Hynix in 2026-Q1 (live=True)...
+[DataCollector] Collecting time-bound data for Murata Manufacturing in 2026-Q1 (live=True)...
+[DataCollector] Collecting time-bound data for Ibiden in 2026-Q1 (live=True)...
+[DataCollector] No sources for SK Hynix -- Evaluator will flag MISSING_GROUNDING.
+[DataCollector] Collecting time-bound data for Samsung Electro-Mechanics in 2026-Q1 (live=True)...
+[DataCollector] Jina scrape failed for https://www.cstimes.com/news/articleView.html?idxno=703234: HTTPSConnectionPool(host='r.jina.ai', port=443): Read timed out. (read timeout=8)
+[DataCollector] Jina scrape failed for https://www.lginnotek.com/ir/report.do: HTTPSConnectionPool(host='r.jina.ai', port=443): Read timed out. (read timeout=8)
+[DataCollector] No sources for Murata Manufacturing -- Evaluator will flag MISSING_GROUNDING.
+[DataCollector] Collecting time-bound data for Apple in 2026-Q1 (live=True)...
+[DataCollector] Collecting time-bound data for LG Electronics in 2026-Q1 (live=True)...
+[DataCollector] Collecting time-bound data for Tesla in 2026-Q1 (live=True)...
+[DataCollector] Collecting time-bound data for Hyundai Motor Company in 2026-Q1 (live=True)...
+[DataCollector] No sources for Samsung Electro-Mechanics -- Evaluator will flag MISSING_GROUNDING.
+[DataCollector] Collecting time-bound data for Microsoft in 2026-Q1 (live=True)...
+[Estimator] Regenerating graph for 2026-Q1 after feedback (10 conflict(s); extra_sources=46)...
+[Estimator] Regeneration applied. Feedback excerpt: - Missing verified sources for edge 'Samsung Electronics-LG이노텍'. Re-collect from the counter-parties' IR or disclosure p
+[Evaluator] Evaluating network consistency for 2026-Q1...
+INFO:     127.0.0.1:55859 - "POST /api/analyze HTTP/1.1" 200 OK
+[DataCollector] Collecting time-bound data for LG이노텍 in 2025-Q4 (live=True)...
+[DataCollector] Collecting time-bound data for Samsung Electronics in 2025-Q4 (live=True)...
+[DataCollector] Collecting time-bound data for SK Hynix in 2025-Q4 (live=True)...
+[DataCollector] Collecting time-bound data for Murata Manufacturing in 2025-Q4 (live=True)...
+[DataCollector] Collecting time-bound data for Ibiden in 2025-Q4 (live=True)...
+[DataCollector] Collecting time-bound data for Texas Instruments in 2025-Q4 (live=True)...
+[DataCollector] Collecting time-bound data for Apple in 2025-Q4 (live=True)...
+[DataCollector] Collecting time-bound data for Tesla in 2025-Q4 (live=True)...
+[DataCollector] No sources for Texas Instruments -- Evaluator will flag MISSING_GROUNDING.
+[DataCollector] Collecting time-bound data for LG Electronics in 2025-Q4 (live=True)...
+[DataCollector] No sources for Ibiden -- Evaluator will flag MISSING_GROUNDING.
+[DataCollector] Collecting time-bound data for Hyundai Motor Company in 2025-Q4 (live=True)...
+[DataCollector] Collecting time-bound data for Kia Corporation in 2025-Q4 (live=True)...
+[DataCollector] No sources for LG Electronics -- Evaluator will flag MISSING_GROUNDING.
+[DataCollector] Jina scrape failed for https://www.mobile01.com/topicdetail.php?f=691&t=7235570: HTTPSConnectionPool(host='r.jina.ai', port=443): Read timed out. (read timeout=8)
+[DataCollector] Jina scrape failed for https://www.mobile01.com/topicdetail.php?f=691&t=7250020: HTTPSConnectionPool(host='r.jina.ai', port=443): Read timed out. (read timeout=8)
+[DataCollector] Jina scrape failed for https://www.mobile01.com/topicdetail.php?f=691&t=7112435: HTTPSConnectionPool(host='r.jina.ai', port=443): Read timed out. (read timeout=8)
+[DataCollector] Jina scrape failed for https://www.mobile01.com/topiclist.php?f=691: HTTPSConnectionPool(host='r.jina.ai', port=443): Read timed out. (read timeout=8)
+[DataCollector] Jina scrape failed for https://www.mobile01.com/topicdetail.php?f=691&t=7029876: HTTPSConnectionPool(host='r.jina.ai', port=443): Read timed out. (read timeout=8)
+[DataCollector] No sources for Kia Corporation -- Evaluator will flag MISSING_GROUNDING.
+[Estimator] Synthesizing PxQ graph for 2025-Q4 (live=True, sources=32)...
+[Evaluator] Evaluating network consistency for 2025-Q4...
+[fx] Frankfurter call failed: 422 Client Error: Unprocessable Entity for url: https://api.frankfurter.dev/v2/rates?base=USD&symbols=KRW&start_date=2025-10-01&end_date=2025-12-31
+INFO:     127.0.0.1:52293 - "POST /api/analyze HTTP/1.1" 200 OK
+[DataCollector] Collecting time-bound data for LG이노텍 in 2025-Q4 (live=True)...
+[DataCollector] Collecting time-bound data for Samsung Electronics in 2025-Q4 (live=True)...
+[DataCollector] Collecting time-bound data for SK Hynix in 2025-Q4 (live=True)...
+[DataCollector] Collecting time-bound data for Murata Manufacturing in 2025-Q4 (live=True)...
+[DataCollector] Jina scrape failed for https://econimic-johndoe.tistory.com/entry/samsung-electronics-2025-earnings-operating-profit-surge: HTTPSConnectionPool(host='r.jina.ai', port=443): Read timed out. (read timeout=8)
+[DataCollector] Collecting time-bound data for Ibiden in 2025-Q4 (live=True)...
+[DataCollector] Jina scrape failed for https://www.etnews.com/20260126000384: HTTPSConnectionPool(host='r.jina.ai', port=443): Read timed out. (read timeout=8)
+[DataCollector] Jina scrape failed for https://www.lginnotek.com/news/pressView.do?locale=ko&idx=6575: HTTPSConnectionPool(host='r.jina.ai', port=443): Read timed out. (read timeout=8)
+[DataCollector] Collecting time-bound data for Cirrus Logic in 2025-Q4 (live=True)...
+[DataCollector] Jina scrape failed for https://www.lifemoneylog.com/entry/SK하이닉스-2025년-실적-총정리-매출-97조·영업이익-47조-무엇이-달랐나: HTTPSConnectionPool(host='r.jina.ai', port=443): Read timed out. (read timeout=8)
+[DataCollector] Jina scrape failed for https://v.daum.net/v/20260423112911789: HTTPSConnectionPool(host='r.jina.ai', port=443): Read timed out. (read timeout=8)
+[DataCollector] Collecting time-bound data for Apple in 2025-Q4 (live=True)...
+[DataCollector] Collecting time-bound data for Tesla in 2025-Q4 (live=True)...
+[DataCollector] No sources for Ibiden -- Evaluator will flag MISSING_GROUNDING.
+[DataCollector] Collecting time-bound data for LG Electronics in 2025-Q4 (live=True)...
+[DataCollector] No sources for Cirrus Logic -- Evaluator will flag MISSING_GROUNDING.
+[DataCollector] Collecting time-bound data for Hyundai Motor Company in 2025-Q4 (live=True)...
+[DataCollector] Collecting time-bound data for General Motors in 2025-Q4 (live=True)...
+[DataCollector] No sources for LG Electronics -- Evaluator will flag MISSING_GROUNDING.
+[DataCollector] No sources for General Motors -- Evaluator will flag MISSING_GROUNDING.
+[Estimator] Synthesizing PxQ graph for 2025-Q4 (live=True, sources=32)...
+[Evaluator] Evaluating network consistency for 2025-Q4...
+[Evaluator] 1 conflict(s) detected -- preparing feedback prompt...
+[Estimator] Regenerating graph for 2025-Q4 after feedback (1 conflict(s); extra_sources=0)...
+[Estimator] Regeneration applied. Feedback excerpt: - PxQ inconsistency on edge 'edge_lg_innotek_tesla'. Either correct estimated_revenue_krw to match P × Q at the quarter-
+[Evaluator] Evaluating network consistency for 2025-Q4...
+INFO:     127.0.0.1:58493 - "POST /api/analyze HTTP/1.1" 200 OK
+[DataCollector] Collecting time-bound data for LG이노텍 in 2025-Q1 (live=True)...
+[DataCollector] Collecting time-bound data for Samsung Electronics in 2025-Q1 (live=True)...
+[DataCollector] Collecting time-bound data for SK Hynix in 2025-Q1 (live=True)...
+[DataCollector] Collecting time-bound data for Murata Manufacturing in 2025-Q1 (live=True)...
+[DataCollector] No sources for Murata Manufacturing -- Evaluator will flag MISSING_GROUNDING.
+[DataCollector] Collecting time-bound data for Ibiden in 2025-Q1 (live=True)...
+[DataCollector] No sources for LG이노텍 -- Evaluator will flag MISSING_GROUNDING.
+[DataCollector] Collecting time-bound data for LG Chem in 2025-Q1 (live=True)...
+[DataCollector] No sources for SK Hynix -- Evaluator will flag MISSING_GROUNDING.
+[DataCollector] Collecting time-bound data for Apple in 2025-Q1 (live=True)...
+[DataCollector] Collecting time-bound data for Tesla in 2025-Q1 (live=True)...
+[DataCollector] Jina scrape failed for https://www.lgchem.com/company/ir/ir-materials/performance: HTTPSConnectionPool(host='r.jina.ai', port=443): Read timed out. (read timeout=8)
+[DataCollector] Jina scrape failed for https://kr.investing.com/equities/ibiden-co-ltd-earnings: HTTPSConnectionPool(host='r.jina.ai', port=443): Read timed out. (read timeout=8)
+[DataCollector] No sources for LG Chem -- Evaluator will flag MISSING_GROUNDING.
+[DataCollector] Collecting time-bound data for LG Electronics in 2025-Q1 (live=True)...
+[DataCollector] Collecting time-bound data for Hyundai Motor in 2025-Q1 (live=True)...
+[DataCollector] Collecting time-bound data for General Motors in 2025-Q1 (live=True)...
+[DataCollector] No sources for Hyundai Motor -- Evaluator will flag MISSING_GROUNDING.
+[DataCollector] No sources for LG Electronics -- Evaluator will flag MISSING_GROUNDING.
+[Estimator] Synthesizing PxQ graph for 2025-Q1 (live=True, sources=24)...
+[Evaluator] Evaluating network consistency for 2025-Q1...
+INFO:     127.0.0.1:56409 - "OPTIONS /api/analyze HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56409 - "POST /api/analyze HTTP/1.1" 200 OK
+[DataCollector] Collecting time-bound data for LG이노텍 in 2025-Q1 (live=True)...
+[DataCollector] Collecting time-bound data for Samsung Electronics in 2025-Q1 (live=True)...
+[DataCollector] Collecting time-bound data for SK Hynix in 2025-Q1 (live=True)...
+[DataCollector] Collecting time-bound data for Murata Manufacturing in 2025-Q1 (live=True)...
+[DataCollector] No sources for LG이노텍 -- Evaluator will flag MISSING_GROUNDING.
+[DataCollector] Collecting time-bound data for Ibiden in 2025-Q1 (live=True)...
+[DataCollector] Collecting time-bound data for LG Chem in 2025-Q1 (live=True)...
+[DataCollector] Jina scrape failed for https://www.skhynix.com/ir-quarterly-results: HTTPSConnectionPool(host='r.jina.ai', port=443): Read timed out. (read timeout=8)
+[DataCollector] No sources for Murata Manufacturing -- Evaluator will flag MISSING_GROUNDING.
+[DataCollector] Collecting time-bound data for Apple in 2025-Q1 (live=True)...
+[DataCollector] Collecting time-bound data for LG Electronics in 2025-Q1 (live=True)...
+[DataCollector] No sources for LG Chem -- Evaluator will flag MISSING_GROUNDING.
+[DataCollector] Collecting time-bound data for Tesla in 2025-Q1 (live=True)...
+[DataCollector] No sources for SK Hynix -- Evaluator will flag MISSING_GROUNDING.
+[DataCollector] Collecting time-bound data for Hyundai Motor Company in 2025-Q1 (live=True)...
+[DataCollector] Collecting time-bound data for General Motors in 2025-Q1 (live=True)...
+[DataCollector] Jina scrape failed for https://www.ppomppu.co.kr/zboard/view.php?id=stock&no=294096: HTTPSConnectionPool(host='r.jina.ai', port=443): Read timed out. (read timeout=8)
+[DataCollector] No sources for Hyundai Motor Company -- Evaluator will flag MISSING_GROUNDING.
+[Estimator] Synthesizing PxQ graph for 2025-Q1 (live=True, sources=33)...
+[Evaluator] Evaluating network consistency for 2025-Q1...
+[Evaluator] 1 conflict(s) detected -- preparing feedback prompt...
+[Estimator] Regenerating graph for 2025-Q1 after feedback (1 conflict(s); extra_sources=0)...
+[Estimator] Regeneration applied. Feedback excerpt: - Double-entry mismatch on edge 'edge_samsung_lginnotek'. Cross-validate seller and buyer reports; prefer the source wit
+[Evaluator] Evaluating network consistency for 2025-Q1...
+[Evaluator] 1 conflict(s) detected -- preparing feedback prompt...
+[Estimator] Regenerating graph for 2025-Q1 after feedback (1 conflict(s); extra_sources=0)...
+[Estimator] Regeneration applied. Feedback excerpt: - Double-entry mismatch on edge 'edge_samsung_lginnotek'. Cross-validate seller and buyer reports; prefer the source wit
+[Evaluator] Evaluating network consistency for 2025-Q1...
+[Evaluator] 1 conflict(s) detected -- preparing feedback prompt...
+INFO:     127.0.0.1:59372 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:59372 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:59372 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:59372 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:59372 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:59372 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:59372 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:59372 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:59372 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:59372 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:59372 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:59372 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:59372 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:59372 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:59372 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:59372 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:59372 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:59372 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:59372 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:59372 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:59372 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:59372 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:59372 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:59372 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:59372 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:59372 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:59372 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:59372 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:59372 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:59372 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:59372 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:59372 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:59372 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:59372 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:59372 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:59372 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:59372 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:59372 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:59372 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:59372 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:59372 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:59372 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:59372 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:59372 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:59372 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:59372 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:59372 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:59372 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:59372 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:59372 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:59372 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:59372 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:59372 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:59372 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:59372 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:59372 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:59372 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:59372 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:59372 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:59372 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:59372 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:59372 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:59372 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50969 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50971 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65257 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65258 - "GET /api/health HTTP/1.1" 404 Not Found
