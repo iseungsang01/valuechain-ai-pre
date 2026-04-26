@@ -24,6 +24,7 @@ interface SupplyChainGraphProps {
   graph: SupplyChainGraphData | null;
   isLoading: boolean;
   onEdgeClick?: (id: string) => void;
+  onEdgeHover?: (id: string | null) => void;
   selectedEdgeId?: string | null;
 }
 
@@ -96,6 +97,22 @@ const computeLayout = (
 ): { nodes: Node[]; edges: Edge[] } => {
   if (apiNodes.length === 0) return { nodes: [], edges: [] };
 
+  const targetNode = apiNodes.find(n => n.type === "TARGET");
+  
+  // 비중(%) 계산을 위한 총합 구하기
+  let totalSupplierKrw = 0;
+  let totalCustomerKrw = 0;
+  
+  if (targetNode) {
+    for (const edge of apiEdges) {
+      if (edge.target === targetNode.id) {
+        totalSupplierKrw += Math.max(0, edge.estimated_revenue_krw);
+      } else if (edge.source === targetNode.id) {
+        totalCustomerKrw += Math.max(0, edge.estimated_revenue_krw);
+      }
+    }
+  }
+
   const dagreGraph = new dagre.graphlib.Graph();
   dagreGraph.setDefaultEdgeLabel(() => ({}));
   dagreGraph.setGraph({ rankdir: "LR", nodesep: 60, ranksep: 120 });
@@ -137,12 +154,23 @@ const computeLayout = (
     const strokeColor = isSelected ? "#ffffff" : (edge.has_conflict ? "#f59e0b" : "#52525b");
     const opacity = isOtherSelected ? 0.7 : 1;
 
+    // 비중 계산
+    let percentage = "";
+    if (targetNode) {
+      const val = Math.max(0, edge.estimated_revenue_krw);
+      if (edge.target === targetNode.id && totalSupplierKrw > 0) {
+        percentage = ` (${((val / totalSupplierKrw) * 100).toFixed(1)}%)`;
+      } else if (edge.source === targetNode.id && totalCustomerKrw > 0) {
+        percentage = ` (${((val / totalCustomerKrw) * 100).toFixed(1)}%)`;
+      }
+    }
+
     return {
       id: edge.id,
       source: edge.source,
       target: edge.target,
       animated: edge.has_conflict,
-      label: formatRevenue(edge.estimated_revenue_krw),
+      label: formatRevenue(edge.estimated_revenue_krw) + percentage,
       labelStyle: {
         fill: edge.has_conflict ? "#fbbf24" : "#e4e4e7",
         fontWeight: 500,
@@ -169,7 +197,7 @@ const computeLayout = (
   return { nodes, edges };
 };
 
-function GraphInner({ graph, isLoading, onEdgeClick, selectedEdgeId }: SupplyChainGraphProps) {
+function GraphInner({ graph, isLoading, onEdgeClick, onEdgeHover, selectedEdgeId }: SupplyChainGraphProps) {
   const { nodes, edges } = useMemo(() => {
     if (!graph) return { nodes: [], edges: [] };
     return computeLayout(graph.nodes, graph.edges, selectedEdgeId);
@@ -205,6 +233,8 @@ function GraphInner({ graph, isLoading, onEdgeClick, selectedEdgeId }: SupplyCha
       edges={edges}
       nodeTypes={nodeTypes}
       onEdgeClick={(_, edge) => onEdgeClick?.(edge.id)}
+      onEdgeMouseEnter={(_, edge) => onEdgeHover?.(edge.id)}
+      onEdgeMouseLeave={() => onEdgeHover?.(null)}
       fitView
       fitViewOptions={{ padding: 0.25 }}
       proOptions={{ hideAttribution: true }}
