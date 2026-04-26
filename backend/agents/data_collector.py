@@ -751,7 +751,8 @@ class DataCollectorAgent(BaseAgent):
             f"the quarter '{target_quarter}'. We MUST try to find explicit P (Price/ASP) and Q (Quantity/Volume) metrics, instead of just defaulting to REVENUE.\n"
             "CRITICAL PRIORITIZATION: If the text mentions TRASS (Korea Trade Statistics Promotion Institute) export/import data, or Korea Customs Service (관세청) data, prioritize this data above all other generic news estimates.\n"
             "If the exact current quarter ASP or Q is missing, you MUST extract historical ASP or Q data (e.g., from the past 3 years, Y-3 to Y-1 or Q-12 to Q-1) if available in the text. This is crucial for trending.\n"
-            "DO NOT just extract top-line REVENUE numbers from earnings releases. Your absolute priority is to find P (ASP, Unit Price) and Q (Volume, Units Sold, Bit Growth). If you find revenue, try to find the P and Q that make up that revenue.\n\n"
+            "DO NOT just extract top-line REVENUE numbers from earnings releases. Your absolute priority is to find P (ASP, Unit Price) and Q (Volume, Units Sold, Bit Growth).\n"
+            "CRITICAL: When analyzing a CUSTOMER company (like Apple), do NOT extract their top-line iPhone or Mac revenue. You MUST look for their PROCUREMENT COSTS, BOM (Bill of Materials) costs, or component-specific spending (e.g., 'Apple spent X on camera modules'). The goal is to find how much the customer PAYS to the supplier, not how much the customer makes overall.\n\n"
             "Return STRICT JSON matching this schema:\n"
             "{\n"
             '  "sources": [\n'
