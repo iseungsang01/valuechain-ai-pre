@@ -30,7 +30,7 @@ export default function Home() {
     setTimeout(() => addLog(`[Evaluator] Computing Loss Function...`), 12000);
 
     try {
-      const response = await fetch("http://localhost:8000/api/analyze", {
+      const response = await fetch("https://contest-beta.vercel.app/api/analyze", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ company_name: company, target_year: targetYear, validation_year: 2023 }),
