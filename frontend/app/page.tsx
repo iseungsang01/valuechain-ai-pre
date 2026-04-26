@@ -15,6 +15,7 @@ export default function Home() {
   const [quarter, setQuarter] = useState<string>("Q3");
   const [selectedEdgeId, setSelectedEdgeId] = useState<string | null>(null);
   const [hoveredEdgeId, setHoveredEdgeId] = useState<string | null>(null);
+  const [showThoughtLog, setShowThoughtLog] = useState(true);
   const { status, logs, activity, graph, error, start, stop } = useAgentStream();
 
   const selectedQuarter = `${year}-${quarter}`;
@@ -24,7 +25,7 @@ export default function Home() {
   const activeEdge = graph?.edges.find(e => e.id === activeEdgeId) ?? null;
 
   return (
-    <main className="flex h-screen w-full flex-col gap-4 px-6 py-5">
+    <main className="flex h-screen w-full flex-col gap-4 px-6 py-5 overflow-hidden">
       <ControlBar
         quarters={[...QUARTERS]}
         year={year}
@@ -34,21 +35,22 @@ export default function Home() {
         targetNode={targetNode}
         onTargetNodeChange={setTargetNode}
         status={status}
-        onAnalyze={() =>
-          start({ targetNode: targetNode.trim(), targetQuarter: selectedQuarter })
-        }
+        onAnalyze={() => {
+          setShowThoughtLog(true);
+          start({ targetNode: targetNode.trim(), targetQuarter: selectedQuarter });
+        }}
         onStop={stop}
       />
 
       {error && (
-        <div className="rounded-xl border border-red-500/40 bg-red-500/10 px-4 py-3 text-sm text-red-200">
+        <div className="z-50 rounded-xl border border-red-500/40 bg-red-500/10 px-4 py-3 text-sm text-red-200">
           <strong className="font-semibold">Connection error:</strong> {error}
           {" "}— make sure the FastAPI backend is running at the configured base
           URL ({process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:8000"}).
         </div>
       )}
 
-      <div className="grid min-h-0 flex-1 gap-4 lg:grid-cols-[minmax(0,7fr)_minmax(0,3fr)]">
+      <div className="relative flex-1 min-h-0 w-full overflow-hidden">
         <SupplyChainGraph 
           graph={graph} 
           isLoading={isStreaming} 
@@ -56,20 +58,37 @@ export default function Home() {
           onEdgeClick={(id) => setSelectedEdgeId(prev => prev === id ? null : id)}
           onEdgeHover={setHoveredEdgeId}
         />
-        <ThoughtLog logs={logs} isStreaming={isStreaming} activity={activity} />
-        <div className="col-start-1 row-start-1 relative pointer-events-none overflow-hidden rounded-2xl">
-          <EdgeDetailPanel edge={activeEdge} onClose={() => {
-            setSelectedEdgeId(null);
-            setHoveredEdgeId(null);
-          }} />
-        </div>
-      </div>
 
-      <footer className="text-center text-xs text-zinc-500">
-        Quarter <span className="text-zinc-300">{selectedQuarter}</span> · Pipeline:
-        Data Collector → Estimator → Evaluator → Feedback Loop · Network
-        consistency enforced via double-entry edges.
-      </footer>
+        {/* Thought Log as a floating popup on the bottom left */}
+        <div className={`absolute bottom-4 left-4 z-50 transition-all duration-300 ${showThoughtLog ? 'w-[400px] h-[500px] opacity-100' : 'w-auto h-auto opacity-80'}`}>
+          {showThoughtLog ? (
+            <div className="relative w-full h-full shadow-2xl">
+              <ThoughtLog logs={logs} isStreaming={isStreaming} activity={activity} />
+              <button 
+                onClick={() => setShowThoughtLog(false)}
+                className="absolute top-3 right-3 text-zinc-400 hover:text-white bg-zinc-800 rounded-md p-1"
+                aria-label="Hide thought log"
+              >
+                Hide
+              </button>
+            </div>
+          ) : (
+            <button
+              onClick={() => setShowThoughtLog(true)}
+              className="bg-zinc-800 text-sm font-medium border border-white/10 shadow-lg text-white px-4 py-2 rounded-full flex items-center gap-2 hover:bg-zinc-700 transition"
+            >
+              <span className={`w-2 h-2 rounded-full ${isStreaming ? 'animate-pulse bg-emerald-400' : 'bg-zinc-500'}`} />
+              Agent Status
+            </button>
+          )}
+        </div>
+
+        {/* Edge Detail Panel on the right */}
+        <EdgeDetailPanel edge={activeEdge} onClose={() => {
+          setSelectedEdgeId(null);
+          setHoveredEdgeId(null);
+        }} />
+      </div>
     </main>
   );
 }

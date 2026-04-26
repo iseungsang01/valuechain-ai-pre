@@ -30,7 +30,7 @@ export function EdgeDetailPanel({ edge, onClose }: EdgeDetailPanelProps) {
           transition={{ type: "spring", damping: 25, stiffness: 200 }}
           role="dialog"
           aria-labelledby="edge-detail-title"
-          className="col-start-1 row-start-1 justify-self-end z-40 w-80 h-full border-l border-white/10 bg-zinc-950/95 p-5 shadow-2xl backdrop-blur-xl rounded-r-2xl overflow-y-auto pointer-events-auto"
+          className="absolute top-0 right-0 z-40 w-80 h-full border-l border-white/10 bg-zinc-950/95 p-5 shadow-2xl backdrop-blur-xl overflow-y-auto pointer-events-auto"
         >
           <div className="mb-6 flex items-start justify-between">
             <div>
