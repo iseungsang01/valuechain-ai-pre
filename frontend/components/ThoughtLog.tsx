@@ -61,12 +61,12 @@ const formatTime = (timestamp: number) => {
 
 export function ThoughtLog({ logs, isStreaming, activity }: ThoughtLogProps) {
   const bottomRef = useRef<HTMLDivElement>(null);
-  const [ticker, setTicker] = useState(0);
+  const [now, setNow] = useState(() => Date.now());
 
   // Force re-render every second to update "elapsed" in the banner.
   useEffect(() => {
     if (!isStreaming) return;
-    const t = setInterval(() => setTicker((x) => x + 1), 1000);
+    const t = setInterval(() => setNow(Date.now()), 1000);
     return () => clearInterval(t);
   }, [isStreaming]);
 
@@ -80,7 +80,7 @@ export function ThoughtLog({ logs, isStreaming, activity }: ThoughtLogProps) {
   // Banner elapsed time formatting
   const getElapsedStr = () => {
     if (!activity) return "";
-    const ms = Date.now() - activity.startedAt;
+    const ms = now - activity.startedAt;
     return ` · ${Math.floor(ms / 1000)}s`;
   };
 

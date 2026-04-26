@@ -20,60 +20,6 @@ export function SourceCitation({ source, index }: SourceCitationProps) {
   const date = source.article_date || source.extraction_date;
 
   return (
-    <div className="group relative rounded-lg border border-white/10 bg-zinc-900/50 p-3 transition-colors hover:bg-zinc-900">
-      <div className="mb-1.5 flex items-start justify-between gap-2">
-        <div className="flex flex-wrap items-center gap-2">
-          <span className="inline-flex h-5 items-center justify-center rounded bg-zinc-800 px-1.5 text-[10px] font-medium text-zinc-300">
-            [{index}]
-          </span>
-          <span
-            className={`rounded border px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-wider ${tierColors[tier]}`}
-          >
-            {tier.replace("_", " ")}
-          </span>
-          {date && (
-            <span className="text-[10px] text-zinc-500">
-              {date.split("T")[0]}
-            </span>
-          )}
-        </div>
-      </div>
-
-      <div className="mb-2">
-        <span className="text-xs font-medium leading-snug text-zinc-200">
-          {source.source_name}
-        </span>
-      </div>
-
-      <div className="mb-2 flex items-center gap-2 font-mono text-[10px] text-zinc-400">
-        <span className="rounded bg-zinc-800/80 px-1.5 py-0.5 text-zinc-300">
-          {source.metric_type}
-        </span>
-        <span>
-          {source.value.toLocaleString()} {source.unit}
-        </span>
-      </div>
-
-      {source.url && (
-        <a
-          href={source.url}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex items-center gap-1.5 text-[10px] font-medium text-emerald-400 hover:text-emerald-300 hover:underline"
-        >
-          <ExternalLink className="h-3 w-3" />
-          <span className="truncate max-w-[200px] sm:max-w-xs">{source.url}</span>
-        </a>
-      )}
-    </div>
-  );
-}
-
-export function SourceCitation({ source, index }: SourceCitationProps) {
-  const tier = source.tier || "FALLBACK";
-  const date = source.article_date || source.extraction_date;
-
-  return (
     <div className="flex flex-col gap-2 rounded-lg border border-white/10 bg-white/5 p-3">
       <div className="flex items-start justify-between gap-3">
         <div className="flex items-start gap-2">

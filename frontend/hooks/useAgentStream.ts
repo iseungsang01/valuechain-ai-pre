@@ -84,7 +84,6 @@ function describeProgress(
       const value = (data as { value?: number }).value;
       const unit = (data as { unit?: string }).unit ?? "";
       const sourceName = (data as { source_name?: string }).source_name ?? "";
-      const url = (data as { url?: string }).url;
       return {
         detail: `${node} · ${metric}=${value}${unit ? " " + unit : ""}`,
         logMessage: `📑 ${node} ${metric}=${value}${unit ? " " + unit : ""} ← ${sourceName}`,
