@@ -114,8 +114,10 @@ class DataCollectorAgent(BaseAgent):
                 with DDGS() as ddgs:
                     # Search for DART disclosures and major suppliers/customers
                     queries = [
-                        f"{target_company} 사업보고서 주요 매입처",
-                        f"{target_company} 주요 고객사 매출 비중"
+                        f'"{target_company}" 사업보고서 "주요 매입처"',
+                        f'"{target_company}" 사업보고서 "주요 매출처"',
+                        f"{target_company} 광학솔루션 Sony",
+                        f"{target_company} 카메라모듈 Sony 자화전자"
                     ]
                     for q in queries:
                         hits = ddgs.text(q, max_results=3)
