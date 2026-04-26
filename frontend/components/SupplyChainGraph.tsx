@@ -200,6 +200,7 @@ const computeLayout = (
 function GraphInner({ graph, isLoading, onEdgeClick, onEdgeHover, selectedEdgeId }: SupplyChainGraphProps) {
   const { nodes, edges } = useMemo(() => {
     if (!graph) return { nodes: [], edges: [] };
+    console.log("Data collection resulted in graph structure:", graph);
     return computeLayout(graph.nodes, graph.edges, selectedEdgeId);
   }, [graph, selectedEdgeId]);
 

@@ -46,7 +46,7 @@ def _safe_emit(cb: Optional[ProgressCallback], event: str, payload: Dict[str, An
         print(f"[progress] callback failed for {event}: {exc}")
 
 try:
-    from duckduckgo_search import DDGS  # type: ignore
+    from ddgs import DDGS  # type: ignore
 except Exception:  # pragma: no cover - optional dependency at runtime
     DDGS = None  # type: ignore
 
@@ -58,7 +58,7 @@ LIVE_DISCLOSURE = os.getenv("LIVE_DISCLOSURE", "true").lower() in {"1", "true", 
 EXTRACTOR_MODEL = os.getenv("EXTRACTOR_MODEL", "gemini-flash-lite-latest")
 DART_API_KEY = os.getenv("DART_API_KEY")
 JINA_BASE_URL = "https://r.jina.ai/"
-JINA_TIMEOUT_SECONDS = 8
+JINA_TIMEOUT_SECONDS = 15
 SEARCH_MAX_RESULTS = 5
 SNIPPET_MAX_CHARS = 4000
 
@@ -604,10 +604,10 @@ class DataCollectorAgent(BaseAgent):
         terms = _quarter_search_terms(target_quarter)
         primary_term = terms[0]
         keywords = [
-            f"{company_name} {primary_term} 매출",
-            f"{company_name} {primary_term} 실적",
-            f"{company_name} {primary_term} ASP",
-            f"{company_name} {target_quarter} revenue earnings",
+            f"{company_name} {primary_term} revenue earnings release",
+            f"{company_name} {primary_term} financial results",
+            f"{company_name} {primary_term} ASP units sold",
+            f"{company_name} {target_quarter} revenue cogs",
         ]
 
         results: List[dict] = []
@@ -622,7 +622,7 @@ class DataCollectorAgent(BaseAgent):
                     continue
                 for hit in hits or []:
                     url = (hit.get("href") or hit.get("url") or "").strip()
-                    if not url or url in seen_urls:
+                    if not url or url in seen_urls or "zhihu.com" in url:
                         continue
                     seen_urls.add(url)
                     results.append(
@@ -649,6 +649,19 @@ class DataCollectorAgent(BaseAgent):
                 return response.text[:SNIPPET_MAX_CHARS]
         except Exception as exc:
             print(f"[{self.role}] Jina scrape failed for {url}: {exc}")
+            
+        # Fallback to direct request if Jina fails
+        try:
+            headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"}
+            response = requests.get(url, headers=headers, timeout=JINA_TIMEOUT_SECONDS)
+            if response.status_code == 200:
+                from bs4 import BeautifulSoup
+                soup = BeautifulSoup(response.text, "html.parser")
+                text = soup.get_text(separator=" ", strip=True)
+                return text[:SNIPPET_MAX_CHARS]
+        except Exception as exc2:
+            print(f"[{self.role}] Direct scrape fallback failed for {url}: {exc2}")
+            
         return ""
 
     def _extract_metrics_from_search_result(

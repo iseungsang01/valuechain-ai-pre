@@ -6,4 +6,4 @@ requests
 python-dotenv
 sse-starlette
 beautifulsoup4
-duckduckgo-search
+ddgs
