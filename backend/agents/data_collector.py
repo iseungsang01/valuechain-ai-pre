@@ -606,10 +606,11 @@ class DataCollectorAgent(BaseAgent):
         terms = _quarter_search_terms(target_quarter)
         primary_term = terms[0]
         keywords = [
+            f"{company_name} {primary_term} average selling price ASP",
+            f"{company_name} {primary_term} shipment volume shipments units sold",
+            f"{company_name} {primary_term} DRAM NAND bit growth volume",
             f"{company_name} {primary_term} revenue earnings release",
             f"{company_name} {primary_term} financial results",
-            f"{company_name} {primary_term} ASP units sold",
-            f"{company_name} {target_quarter} revenue cogs",
         ]
 
         results: List[dict] = []
@@ -720,12 +721,14 @@ class DataCollectorAgent(BaseAgent):
         prompt = (
             "You are a financial data extractor. Read the article excerpt below "
             f"and extract any quantitative figures about '{company_name}' for "
-            f"the quarter '{target_quarter}'. Return STRICT JSON matching this schema:\n"
+            f"the quarter '{target_quarter}'. We MUST try to find explicit P (Price/ASP) and Q (Quantity/Volume) metrics, instead of just defaulting to REVENUE.\n\n"
+            "Return STRICT JSON matching this schema:\n"
             "{\n"
             '  "sources": [\n'
             "    {\n"
             '      "metric_type": "ASP" | "Q" | "REVENUE" | "COGS",\n'
-            '      // Note: "Q" means Quantity of Units Sold, not Quarter or Profit.\n'
+            '      // Note: "Q" means Quantity of Units Sold or Shipment Volume, not Quarter or Profit.\n'
+            '      // Note: "ASP" means Average Selling Price or Unit Price.\n'
             '      "value": <number>,\n'
             '      "unit": <string, e.g. USD, KRW, KRW_HUNDRED_MILLION, units>,\n'
             '      "source_name": <short human label>,\n'

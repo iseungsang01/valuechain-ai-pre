@@ -21,20 +21,30 @@ export function SourceCitation({ source, index }: SourceCitationProps) {
   const tier = source.tier || "FALLBACK";
   const date = source.article_date || source.extraction_date;
 
+  const badgeContent = (
+    <button
+      type="button"
+      onMouseEnter={() => setIsOpen(true)}
+      onMouseLeave={() => setIsOpen(false)}
+      onFocus={() => setIsOpen(true)}
+      onBlur={() => setIsOpen(false)}
+      aria-pressed={isOpen}
+      aria-describedby={`citation-tooltip-${index}`}
+      className="inline-flex h-5 items-center justify-center rounded bg-zinc-800 px-1.5 text-[10px] font-medium text-zinc-300 transition-colors hover:bg-zinc-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-emerald-400/50"
+    >
+      [{index}]
+    </button>
+  );
+
   return (
     <div className="relative inline-block">
-      <button
-        type="button"
-        onMouseEnter={() => setIsOpen(true)}
-        onMouseLeave={() => setIsOpen(false)}
-        onFocus={() => setIsOpen(true)}
-        onBlur={() => setIsOpen(false)}
-        aria-pressed={isOpen}
-        aria-describedby={`citation-tooltip-${index}`}
-        className="inline-flex h-5 items-center justify-center rounded bg-zinc-800 px-1.5 text-[10px] font-medium text-zinc-300 transition-colors hover:bg-zinc-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-emerald-400/50"
-      >
-        [{index}]
-      </button>
+      {source.url ? (
+        <a href={source.url} target="_blank" rel="noopener noreferrer">
+          {badgeContent}
+        </a>
+      ) : (
+        badgeContent
+      )}
 
       {isOpen && (
         <div
