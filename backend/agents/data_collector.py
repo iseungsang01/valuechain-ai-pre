@@ -611,6 +611,8 @@ class DataCollectorAgent(BaseAgent):
             f"{company_name} {primary_term} DRAM NAND bit growth volume",
             f"{company_name} {primary_term} revenue earnings release",
             f"{company_name} {primary_term} financial results",
+            f"{company_name} historical ASP trend",
+            f"{company_name} ASP past 3 years",
         ]
 
         results: List[dict] = []
@@ -721,7 +723,8 @@ class DataCollectorAgent(BaseAgent):
         prompt = (
             "You are a financial data extractor. Read the article excerpt below "
             f"and extract any quantitative figures about '{company_name}' for "
-            f"the quarter '{target_quarter}'. We MUST try to find explicit P (Price/ASP) and Q (Quantity/Volume) metrics, instead of just defaulting to REVENUE.\n\n"
+            f"the quarter '{target_quarter}'. We MUST try to find explicit P (Price/ASP) and Q (Quantity/Volume) metrics, instead of just defaulting to REVENUE.\n"
+            "If the exact current quarter ASP or Q is missing, you MAY extract historical ASP or Q data (e.g., from the past 3 years, Y-3 to Y-1 or Q-12 to Q-1) if available in the text.\n\n"
             "Return STRICT JSON matching this schema:\n"
             "{\n"
             '  "sources": [\n'
@@ -737,7 +740,7 @@ class DataCollectorAgent(BaseAgent):
             "    }, ...\n"
             "  ]\n"
             "}\n"
-            "If no numeric data fits the company AND quarter, return {\"sources\": []}.\n"
+            "If no numeric data fits the exact quarter, BUT you find historical ASP or Quantity data for the past 1 to 3 years (e.g. Y-3 to Y-1), EXTRACT that historical data and explicitly note it in the explanation.\n"
             "Do NOT fabricate numbers. Only use values explicitly present in the excerpt.\n\n"
             f"ARTICLE TITLE: {title}\n"
             f"ARTICLE URL: {url}\n"

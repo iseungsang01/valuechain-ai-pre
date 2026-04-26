@@ -176,6 +176,7 @@ class EstimatorAgent(BaseAgent):
             "Ground every edge in at least one of the provided sources by "
             'copying that source\'s array index into the edge\'s "grounding_source_indices". '
             "Do not invent URLs or numeric values that are not present in the sources. "
+            "If the exact current quarter ASP or Q is missing but historical data (e.g. Y-3 to Y-1, or Q-12 to Q-1) is provided in the sources, ESTIMATE the current ASP/Q based on the historical 3-year trend and populate p_as_usd and q_units accordingly. "
             "Use double-entry semantics: a single edge from A to B represents both A's "
             "revenue to B and B's procurement cost from A.\n\n"
             "Return JSON with this exact shape:\n"
