@@ -27,7 +27,7 @@ def main():
     prompt = sys.stdin.read()
     
     # Using gemini-1.5-pro-latest as specified in the plan
-    url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-pro-latest:generateContent?key={api_key}"
+    url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-pro-preview:generateContent?key={api_key}"
     
     system_instruction = (
         "You are an autonomous AI coding agent. "

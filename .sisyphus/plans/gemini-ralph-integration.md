@@ -24,7 +24,7 @@ Integrate the Gemini 3.1 Pro API into the existing `ralph_loop.sh` framework to 
 - **Core Logic**:
   - Read `sys.stdin` for the prompt.
   - Require `GEMINI_API_KEY` from environment variables. Exit `1` if missing. (Note: Currently the system environment does not have GEMINI_API_KEY exported. Ensure the user sets it or the loop script handles it safely).
-  - Structure the API payload using `generativelanguage.googleapis.com/v1beta/models/gemini-3.1-pro-latest:generateContent`. (Note: use gemini-1.5-pro-latest as the stable fallback for 3.1 Pro endpoint routing if needed).
+  - Structure the API payload using `generativelanguage.googleapis.com/v1beta/models/gemini-3.1-pro-preview:generateContent`. (Note: use gemini-1.5-pro-latest as the stable fallback for 3.1 Pro endpoint routing if needed).
   - Include a strong `systemInstruction` demanding output in `<file path="..."></file>` format.
   - Set `temperature: 0.1` for deterministic code generation.
   - **Security (Metis Guardrail)**: Validate paths to reject absolute paths or paths containing `..` to prevent directory traversal.
