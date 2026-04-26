@@ -630,18 +630,14 @@ class DataCollectorAgent(BaseAgent):
 
         terms = _quarter_search_terms(target_quarter)
         primary_term = terms[0]
-        search_name = company_name.replace("-", " ")
         keywords = [
-            f"{search_name} {primary_term} average selling price ASP",
-            f"{search_name} {primary_term} shipment volume shipments units sold",
-            f"{search_name} {primary_term} DRAM NAND bit growth volume",
-            f"{search_name} {primary_term} revenue earnings release",
-            f"{search_name} {primary_term} financial results",
-            f"{search_name} historical ASP trend",
-            f"{search_name} ASP past 3 years",
-            f"{search_name} {primary_term} supply contract",
-            f"{search_name} {primary_term} order volume",
-            f"{search_name} {primary_term} partnership agreement",
+            f"{company_name} {primary_term} TRASS 수출입 데이터",
+            f"{company_name} {primary_term} average selling price ASP",
+            f"{company_name} {primary_term} shipment volume shipments units sold",
+            f"{company_name} 관세청 수출 데이터",
+            f"{company_name} {primary_term} revenue earnings release",
+            f"{company_name} {primary_term} financial results",
+            f"{company_name} historical ASP trend",
         ]
 
         results: List[dict] = []
@@ -753,7 +749,8 @@ class DataCollectorAgent(BaseAgent):
             "You are a financial data extractor. Read the article excerpt below "
             f"and extract any quantitative figures about '{company_name}' for "
             f"the quarter '{target_quarter}'. We MUST try to find explicit P (Price/ASP) and Q (Quantity/Volume) metrics, instead of just defaulting to REVENUE.\n"
-            "If the exact current quarter ASP or Q is missing, you MAY extract historical ASP or Q data (e.g., from the past 3 years, Y-3 to Y-1 or Q-12 to Q-1) if available in the text.\n\n"
+            "CRITICAL PRIORITIZATION: If the text mentions TRASS (Korea Trade Statistics Promotion Institute) export/import data, or Korea Customs Service (관세청) data, prioritize this data above all other generic news estimates.\n"
+            "If the exact current quarter ASP or Q is missing, you MAY extract historical ASP or Q data (e.g., from the past 3 years, Y-3 to Y-1 or Q-12 to Q-1) if available in the text. This is crucial for trending.\n\n"
             "Return STRICT JSON matching this schema:\n"
             "{\n"
             '  "sources": [\n'
