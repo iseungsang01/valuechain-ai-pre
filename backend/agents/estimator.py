@@ -173,16 +173,21 @@ class EstimatorAgent(BaseAgent):
         prompt = (
             "You are a supply chain financial estimator. Build a quarterly "
             "supply chain network as STRICT JSON for the target quarter. "
+            "CRITICAL: You MUST create an edge for EVERY supplier->target and target->customer relationship provided in the candidate lists. Do NOT skip any supplier or customer. The client-supplier mapping is FIXED. "
             "Ground every edge in at least one of the provided sources by "
             'copying that source\'s array index into the edge\'s "grounding_source_indices". '
-            "Do not invent URLs or numeric values that are not present in the sources. "
-            "If the exact current quarter ASP or Q is missing but historical data (e.g. Y-3 to Y-1, or Q-12 to Q-1) is provided in the sources, ESTIMATE the current ASP/Q based on the historical 3-year trend and populate p_as_usd and q_units accordingly. "
+            "Do not invent URLs. "
+            "CRITICAL: Your primary goal is to ESTIMATE sales (estimated_revenue_krw). "
+            "If exact current quarter revenue, ASP, or Q is missing or there is no direct source linking the two companies, DO NOT output 0 or drop the edge. "
+            "Instead, you MUST ESTIMATE a reasonable non-zero value based on logical inference (e.g. Estimated Revenue = Q * P, where Q = Customer Volume * Adoption Rate * Supplier Share, and P = Supplier ASP). "
+            "CRITICAL HANDLING OF AGGREGATE DATA: In many corporate disclosures (like DART), procurement costs are given as a total for a component category (e.g., 'Actuator total 4.2 trillion KRW') along with a list of multiple suppliers (e.g., 'Jahwa, Alps'). In this case, you MUST logically distribute that total pool among the connected suppliers using estimated vendor market shares. "
+            "If you make an estimation without strong direct grounding, set \"is_estimated\": true, and provide your logical basis and calculation formula in the \"rationale\" field. "
             "Use double-entry semantics: a single edge from A to B represents both A's "
             "revenue to B and B's procurement cost from A.\n\n"
             "Return JSON with this exact shape:\n"
             "{\n"
             '  "nodes": [{"id":<string>,"name":<string>,"type":"TARGET"|"SUPPLIER"|"CUSTOMER","reported_cogs_krw":<number|null>}],\n'
-            '  "edges": [{"id":<string>,"source":<node id>,"target":<node id>,"estimated_revenue_krw":<number>,"p_as_usd":<number|null>,"q_units":<number|null>,"grounding_source_indices":[<int>]}]\n'
+            '  "edges": [{"id":<string>,"source":<node id>,"target":<node id>,"estimated_revenue_krw":<number>,"p_as_usd":<number|null>,"q_units":<number|null>,"grounding_source_indices":[<int>],"is_estimated":<boolean>,"rationale":<string|null>}]\n'
             "}\n\n"
             f"TARGET COMPANY: {target_node}\n"
             f"TARGET QUARTER: {target_quarter}\n"
@@ -239,6 +244,8 @@ class EstimatorAgent(BaseAgent):
                             float(e["q_units"]) if e.get("q_units") is not None else None
                         ),
                         grounding_sources=edge_sources,
+                        is_estimated=bool(e.get("is_estimated", False)),
+                        rationale=str(e["rationale"]) if e.get("rationale") else None,
                     )
                 )
 

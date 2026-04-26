@@ -34,6 +34,8 @@ class Edge(BaseModel):
     q_units: Optional[float] = None
     grounding_sources: List[GroundingSource] = []
     has_conflict: bool = False
+    is_estimated: bool = False
+    rationale: Optional[str] = None  # Logical basis for the estimation
 
 
 class Node(BaseModel):

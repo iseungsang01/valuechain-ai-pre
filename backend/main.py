@@ -46,6 +46,8 @@ app.add_middleware(
 class AnalysisRequest(BaseModel):
     target_node: str  # Initial company to analyze
     target_quarter: str  # Format: "2024-Q3"
+    suppliers: list[str] | None = None  # Fixed supplier list (Optional)
+    customers: list[str] | None = None  # Fixed customer list (Optional)
 
 
 def _sse(event: str, payload: Dict[str, Any]) -> Dict[str, str]:
@@ -158,30 +160,44 @@ async def run_analysis(req: AnalysisRequest):
         evaluator = EvaluatorAgent(client=genai_client, model_id=MODEL_ID)
 
         # --- PHASE 0: NETWORK DISCOVERY (Spec § 2.1 quarterly network) -----
-        yield _sse(
-            "COLLECTING",
-            {
-                "status": "in_progress",
-                "message": (
-                    f"Discovering supply network around {req.target_node} "
-                    f"for {req.target_quarter}..."
-                ),
-            },
-        )
-        await asyncio.sleep(0.05)
+        if req.suppliers is not None or req.customers is not None:
+            yield _sse(
+                "COLLECTING",
+                {
+                    "status": "in_progress",
+                    "message": f"Using fixed supply network provided by user for {req.target_node}...",
+                },
+            )
+            await asyncio.sleep(0.05)
+            network = {
+                "suppliers": req.suppliers or [],
+                "customers": req.customers or []
+            }
+        else:
+            yield _sse(
+                "COLLECTING",
+                {
+                    "status": "in_progress",
+                    "message": (
+                        f"Discovering supply network around {req.target_node} "
+                        f"for {req.target_quarter}..."
+                    ),
+                },
+            )
+            await asyncio.sleep(0.05)
 
-        # Network discovery is a single LLM call -- run it inline (fast).
-        discover_q, discover_cb = _make_progress_sink()
-        loop = asyncio.get_running_loop()
-        discover_future = loop.run_in_executor(
-            None,
-            lambda: data_collector.discover_network(
-                req.target_node, req.target_quarter, progress_callback=discover_cb
-            ),
-        )
-        async for frame in _drain_progress(discover_future, discover_q, "COLLECTING"):
-            yield frame
-        network = await discover_future
+            # Network discovery is a single LLM call -- run it inline (fast).
+            discover_q, discover_cb = _make_progress_sink()
+            loop = asyncio.get_running_loop()
+            discover_future = loop.run_in_executor(
+                None,
+                lambda: data_collector.discover_network(
+                    req.target_node, req.target_quarter, progress_callback=discover_cb
+                ),
+            )
+            async for frame in _drain_progress(discover_future, discover_q, "COLLECTING"):
+                yield frame
+            network = await discover_future
 
         # --- PHASE 1: COLLECTING (network-wide) ---------------------------
         suppliers = network.get("suppliers", []) or []

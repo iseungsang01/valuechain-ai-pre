@@ -198,10 +198,15 @@ class EvaluatorAgent(BaseAgent):
     def _check_grounding_integrity(
         self, graph: SupplyChainGraph
     ) -> List[ConflictDetail]:
-        """Every edge must carry at least one grounding source."""
+        """Every edge must carry at least one grounding source, unless it is an estimated value."""
         conflicts: List[ConflictDetail] = []
         for edge in graph.edges:
             if not edge.grounding_sources:
+                # Relax the constraint: if the Estimator guessed a non-zero value and explicitly tagged it,
+                # we allow it to pass without a hard conflict, though it has weak/no grounding.
+                if edge.is_estimated and edge.estimated_revenue_krw > 0:
+                    continue
+                
                 conflicts.append(
                     ConflictDetail(
                         type="MISSING_GROUNDING",
