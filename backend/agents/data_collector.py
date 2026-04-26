@@ -119,9 +119,11 @@ class DataCollectorAgent(BaseAgent):
             '  "suppliers": [<company name>, ...],\n'
             '  "customers": [<company name>, ...]\n'
             "}\n"
-            "Limit each list to at most 5 entries. Use commonly reported names. "
-            "Only include parties with publicly observable B2B trade for the "
-            "target quarter. Never invent counter-parties to fill the list.\n\n"
+            "Limit each list to at most 15 entries. Use commonly reported names. "
+            "Include domestic and global parties with publicly observable B2B trade for the "
+            "target quarter. Pay special attention to global OSATs or foundries if the target is a semiconductor equipment maker.\n"
+            "For example, if the target company is Hanmi Semiconductor, include key customers like SK Hynix, Micron, ASE, AmKor, JCET, Huatian, TFME, Infineon, ST Micro, PTI, Skyworks, Luxshare, JCET STATS ChipPAC Korea, ASE Korea, Amkor Korea, Samsung Electro-Mechanics, LG Innotek, Korea Circuit, SFA Semiconductor, Signetics, etc.\n"
+            "Never invent counter-parties to fill the list.\n\n"
             f"TARGET: {target_company}\n"
             f"QUARTER: {target_quarter}"
         )
@@ -129,8 +131,8 @@ class DataCollectorAgent(BaseAgent):
         if not parsed or not isinstance(parsed, dict):
             return _empty_network()
 
-        suppliers = [str(x).strip() for x in (parsed.get("suppliers") or []) if str(x).strip()][:5]
-        customers = [str(x).strip() for x in (parsed.get("customers") or []) if str(x).strip()][:5]
+        suppliers = [str(x).strip() for x in (parsed.get("suppliers") or []) if str(x).strip()][:15]
+        customers = [str(x).strip() for x in (parsed.get("customers") or []) if str(x).strip()][:15]
         return {"suppliers": suppliers, "customers": customers}
 
     # -------------------------------------------------------------------
