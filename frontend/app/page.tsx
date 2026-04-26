@@ -11,7 +11,7 @@ const QUARTERS = ["Q1", "Q2", "Q3", "Q4"] as const;
 
 export default function Home() {
   const [targetNode, setTargetNode] = useState("SK하이닉스");
-  const [year, setYear] = useState(2026);
+  const [year, setYear] = useState(2025);
   const [quarter, setQuarter] = useState<string>("Q1");
   const [selectedEdgeId, setSelectedEdgeId] = useState<string | null>(null);
   const [hoveredEdgeId, setHoveredEdgeId] = useState<string | null>(null);
