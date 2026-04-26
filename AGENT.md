@@ -1,33 +1,34 @@
 # ValueChain AI - Agent Instructions
 
-## 1. Project Overview
-ValueChain AI는 투자자, 애널리스트, 리서처 등 일반 사용자를 위한 **공급망 기반 기업 재무(매출/비용) 추정 및 분석 에이전트**입니다.
-단순히 기업의 재무제표를 묻고 단편적인 결과를 내놓는 것을 넘어, "어느 회사에 얼마를 팔고, 어느 회사에서 얼마를 사는지" 공급망 데이터를 세부적으로 쪼개어 분석함으로써 최대한 정확하고 논리적인 추정치를 도출하는 것을 목표로 합니다.
+## 1. Project Overview & Business Value
+ValueChain AI는 투자자, 애널리스트, 기관 리서처를 위한 **공급망 기반 기업 재무 추정 및 분석 에이전트(SaaS)** 입니다.
+- **Problem & Market Clarity**: 기업의 B2B 거래 내역과 단가(ASP)/물량(Q) 정보는 파편화되어 있어 수작업 추정이 매우 어렵습니다. 이 문제를 해결하여 금융/투자 시장에서 압도적인 리서치 우위를 제공합니다.
+- **Core Value (AI Integration)**: 단순히 기업의 재무제표를 조회하는 것을 넘어, AI가 흩어진 기사와 통계 데이터를 조합하여 "어느 회사에 얼마를 팔고(매출), 얼마를 사는지(비용)"를 세부적으로 분석합니다.
+- **Business Viability**: 헤지펀드, 증권사 리서치 센터, 전략 기획 부서를 타겟으로 하는 B2B 구독 모델(SaaS)로 포지셔닝하며, 대체 불가능한 알파(Alpha) 창출 도구로 기능합니다.
 
 ## 2. Core Analytical Mechanics (핵심 분석 메커니즘)
-- **매출(Revenue) 추정**: 타겟 기업의 주요 고객사(Downstream)를 식별합니다. 각 고객사에 납품하는 품목, 단가(ASP), 물량을 수출입 통계치, 신문 기사 등을 기반으로 분석하여 각 고객사별 매출을 추정 및 합산합니다.
-- **비용(Cost) 추정**: 타겟 기업의 주요 공급사(Upstream)를 식별합니다. 조달하는 원자재나 부품, 구매량 및 단가를 동일한 방식으로 분석하여 비용을 추정합니다.
-- **🚨 필수 원칙 (Grounding & Reference)**: 에이전트가 추정한 각 기업별 거래 데이터에는 **반드시 실제 뉴스 기사, 공시 자료, 수출입 통계 등의 구체적인 출처 목록과 링크(URL)를 필수적으로 첨부**해야 합니다. (할루시네이션 철저히 방지)
+- **분기별 망 전체 동기화 (Quarterly Network Consistency)**: 개별 기업을 따로 추정하지 않고, 특정 분기(Quarter)를 타겟으로 공급망 전체(Network)의 노드와 엣지를 한 번에 추정합니다.
+- **이중 회계(Double-Entry) 엣지**: A사가 B사에게 납품한 금액은 "A사의 B사향 매출"이자 동시에 "B사의 A사발 조달 비용"이라는 단일 엣지(Edge)로 관리되어 완벽한 정합성을 추구합니다.
+- **🚨 필수 출처 원칙 (Grounding)**: 모든 추정 데이터에는 실제 뉴스 기사, 공시 자료, 수출입 통계 등의 구체적인 출처(URL)가 필수적으로 첨부되어야 합니다.
 
 ## 3. Evaluator 기반 자가 피드백 시스템 (Self-Reflection Loop)
-단일 검색으로 결과를 도출하지 않고, **평가자(Evaluator)** 로직을 통해 도출 과정과 품질을 검증합니다.
-- **동작 방식**: 1차로 분석된 매출/비용 추정 결과와 사용된 프롬프트를 Evaluator가 검토합니다.
-- **자가 피드백**: Evaluator는 "ASP 정보가 부족하다", "A사향 매출 기사가 너무 오래되었다", "이 부분은 논리적 비약이 있으니 수출 통계 자료를 더 교차 검증하라" 등의 주요 포인트를 짚어내고, 이를 바탕으로 분석 방향과 프롬프트를 자동 수정하여 완성도를 높입니다.
+1차 분석 결과를 단방향으로 제공하는 것이 아니라, **평가자(Evaluator)** 로직이 도출 과정과 품질을 스스로 검증합니다.
+- **전체 망 모순 평가**: "추정된 B사의 매입 비용 총합이 B사의 해당 분기 발표 매출원가(COGS)를 초과하는가?", "A-B 간의 매출/비용 추정치 간 간극이 있는가?"를 검사합니다.
+- **자가 피드백**: 모순이나 논리적 비약(오래된 ASP 정보 등)이 발견되면, Evaluator는 구체적 프롬프트를 자동 생성하여 데이터 재수집 및 재계산을 지시합니다.
 
 ## 4. Tech Stack & Architecture
-- **Frontend**: Next.js 16.2.4 (App Router), React 19.2.4, Tailwind CSS v4, Framer Motion, TypeScript
+- **Frontend**: Next.js 16.2.4 (App Router), React 19.2.4, Tailwind CSS v4, Framer Motion, React Flow (망 시각화), TypeScript
 - **Backend**: Python 3.x, FastAPI, Uvicorn, Google GenAI, SSE-Starlette
 - **AI Architecture (Multi-Agent System)**: 
-  - `Data Collector`: 신뢰할 수 있는 출처(기사, 통계, 공시 등)로부터 기업 공급망 데이터를 수집
-  - `Estimator`: 수집된 데이터를 바탕으로 ASP, 물량, 매출 및 비용을 세부적으로 추론하고 계산
-  - `Evaluator`: 추정 결과의 논리적 오류 검증 및 부족한 데이터에 대해 자가 피드백 루프(Self-Feedback Loop) 실행
+  - `Data Collector`: 신뢰할 수 있는 출처로부터 시계열(특정 분기) 기준 공급망 데이터 수집
+  - `Estimator`: ASP, 물량, 매출 및 비용을 수식화(P x Q)하여 엣지 데이터 도출
+  - `Evaluator`: 망 전체 정합성(Network Consistency) 오류 검증 및 피드백 루프 실행
 
 ## 5. UI/UX & Design System (사용자 중심 대시보드)
-투자자와 리서처가 복잡한 데이터를 직관적으로 이해하고 분석할 수 있도록 대시보드 및 리포트 형태로 구성합니다.
-- **테마 및 색상**: 데이터를 명확하게 보여줄 수 있는 깔끔하고 신뢰감 주는 디자인 (가독성 최우선).
-- **Typography**: 숫자가 잘 보이고 텍스트 밀도가 높아도 가독성이 뛰어난 폰트 적용.
-- **컴포넌트 구성**: 매출/비용 추정 결과가 담긴 테이블, 공급망(Supply Chain) 구조를 보여주는 다이어그램, 각 수치별 근거가 되는 뚜렷한 출처(Reference) 링크 목록을 명확하게 배치합니다.
+투자자가 복잡한 공급망 밸런스를 직관적으로 인지할 수 있도록 구성합니다.
+- **대시보드 UI**: 특정 분기를 선택할 수 있는 타임 슬라이더와 Supply Chain Graph 제공.
+- **Conflict Highlighting**: Evaluator가 충돌을 감지해 피드백 루프를 도는 엣지(Edge)를 깜빡이는 선으로 시각화하여 AI의 사고 과정을 투명하게 노출.
+- **Typography & Color**: 가독성 최우선. 출처 링크와 계산식(P x Q)을 명확히 분리하여 신뢰성 있는 뷰 제공.
 
-## 6. ⚠️ Version Control & Git Workflow (필수 및 자동화)
-- **에이전트는 코드 변경이나 파일 수정 작업을 완료한 후, 반드시 원격 저장소에 반영해야 합니다.**
-- **작업이 완료되는 시점에 에이전트는 자동으로 `git add`, `git commit`, `git push`를 수행하여 변경 사항을 동기화해야 합니다.** (유저의 별도 승인 없이 수행)
+## 6. ⚠️ Version Control & Git Workflow
+- 에이전트는 코드 변경이나 파일 수정 작업을 완료한 후, 반드시 원격 저장소에 `git add`, `git commit`, `git push`를 수행하여 변경 사항을 동기화해야 합니다.
