@@ -94,7 +94,7 @@ export function EdgeDetailPanel({ edge, onClose }: EdgeDetailPanelProps) {
                 Grounding Sources
               </h3>
               {edge.grounding_sources.length > 0 ? (
-                <div className="flex flex-wrap gap-2">
+                <div className="flex flex-col gap-3">
                   {edge.grounding_sources.map((source, idx) => (
                     <SourceCitation key={idx} source={source} index={idx + 1} />
                   ))}
