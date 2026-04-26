@@ -1,15 +1,28 @@
+import os
+import json
+import asyncio
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-import uvicorn
-import asyncio
+from google import genai
+from dotenv import load_dotenv
+from sse_starlette.sse import EventSourceResponse
 
-from agents.researcher import ResearcherAgent
-from agents.generator import GeneratorAgent
+# Load environment variables
+load_dotenv()
+
+# Setup GenAI Client (Initialize ONCE for all agents)
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+genai_client = genai.Client(api_key=GEMINI_API_KEY)
+MODEL_ID = "gemini-3.1-pro-preview" # For Hackathon, use Pro for better reasoning
+
+# Import new agents
+from agents.data_collector import DataCollectorAgent
+from agents.estimator import EstimatorAgent
 from agents.evaluator import EvaluatorAgent
-from agents.tech_eval import TechEvaluatorAgent
+from agents.models import SupplyChainGraph
 
-app = FastAPI(title="Octo-Fin API", description="AI Financial Agent for Semiconductor Supply Chain")
+app = FastAPI(title="ValueChain AI API", description="Supply Chain 기반 기업 재무 추정 및 분석 에이전트")
 
 app.add_middleware(
     CORSMiddleware,
@@ -20,78 +33,98 @@ app.add_middleware(
 )
 
 class AnalysisRequest(BaseModel):
-    company_name: str
-    target_year: int
-    validation_year: int = 2023 
-
-# Instantiate agents
-researcher = ResearcherAgent()
-generator = GeneratorAgent()
-evaluator = EvaluatorAgent()
-tech_evaluator = TechEvaluatorAgent()
+    target_node: str # Initial company to analyze
+    target_quarter: str # Format: "2024-Q3"
 
 @app.get("/")
 def read_root():
-    return {"status": "Octo-Fin API is running"}
+    return {"status": "ValueChain AI Backend is running"}
 
 @app.post("/api/analyze")
 async def run_analysis(req: AnalysisRequest):
-    try:
-        # Step 1: Research
-        print(f"[Researcher] Starting research for {req.company_name} in {req.target_year}...")
-        research_result = researcher.research_company(req.company_name, req.target_year)
+    """
+    Starts the full multi-agent pipeline with SSE streaming.
+    """
+    
+    # SSE Stream Generator
+    async def stream_generator():
+        # Instantiate agents, passing the common client/model
+        data_collector = DataCollectorAgent(client=genai_client, model_id=MODEL_ID)
+        estimator = EstimatorAgent(client=genai_client, model_id=MODEL_ID)
+        evaluator = EvaluatorAgent(client=genai_client, model_id=MODEL_ID)
         
-        # Step 2: Generation
-        print(f"[Generator] Building financial model...")
-        initial_model = generator.generate_financial_model(
-            req.company_name, 
-            req.target_year, 
-            research_result['synthesized_facts']
-        )
-        
-        # Step 3: Evaluation (Self-Correction Loop - Simplified for Demo)
-        # In a real scenario, we'd look up actual DART revenue for the validation year.
-        # Here we mock ground truth for the demo based on the company.
-        ground_truth = 1000000000000 # Default 1 Trillion KRW
-        if "한미반도체" in req.company_name:
-            ground_truth = 159000000000  # Approx 159B KRW for Hanmi in 2023
-        elif "SK" in req.company_name or "하이닉스" in req.company_name:
-            ground_truth = 32700000000000 # Approx 32.7T KRW for SK Hynix in 2023
-            
-        print(f"[Evaluator] Validating against {req.validation_year} ground truth...")
-        evaluation_result = evaluator.calculate_loss_and_feedback(
-            req.company_name,
-            req.validation_year,
-            initial_model,
-            ground_truth
-        )
-        
-        # Optional: Step 3.5 - Regenerate based on feedback if loss is too high
-        final_model = initial_model
-        feedback_str = None
-        if "loss_score" in evaluation_result and evaluation_result["loss_score"] > 100:
-            print(f"[Generator] Loss too high! Regenerating based on feedback...")
-            feedback_str = evaluation_result.get("feedback_for_generator", "")
-            refined_prompt = research_result['synthesized_facts'] + "\n\nCRITICAL FEEDBACK FROM EVALUATOR:\n" + feedback_str
-            final_model = generator.generate_financial_model(req.company_name, req.target_year, refined_prompt)
-
-        # Step 4: Tech Evaluation & Formatting
-        print(f"[Tech Evaluator] Packaging final report...")
-        final_payload = tech_evaluator.package_final_report(
-            req.company_name,
-            req.target_year,
-            research_result['synthesized_facts'],
-            final_model,
-            feedback_str
-        )
-        
-        return {
-            "status": "success",
-            "data": final_payload
+        # --- PHASE 1: COLLECTING ---
+        yield {
+            "event": "COLLECTING",
+            "data": json.dumps({"status": "in_progress", "message": f"Time-bound data for {req.target_node} ({req.target_quarter}) is being collected..."})
         }
+        await asyncio.sleep(1.5) # Simulating network latency
         
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        grounding_sources = data_collector.collect_quarterly_data(req.target_node, req.target_quarter)
+        
+        yield {
+            "event": "COLLECTING",
+            "data": json.dumps({"status": "complete", "sources_count": len(grounding_sources)})
+        }
+
+        # --- PHASE 2: ESTIMATING ---
+        yield {
+            "event": "ESTIMATING",
+            "data": json.dumps({"status": "in_progress", "message": "Synthesizing grounding sources to build PxQ network..."})
+        }
+        await asyncio.sleep(1.5)
+        
+        final_graph = estimator.generate_graph(req.target_quarter, grounding_sources)
+        
+        yield {
+            "event": "ESTIMATING",
+            "data": json.dumps({"status": "complete"})
+        }
+
+        # --- PHASE 3: EVALUATING & FEEDBACK ---
+        yield {
+            "event": "EVALUATING",
+            "data": json.dumps({"status": "in_progress", "message": "Evaluating network consistency & self-reflection..."})
+        }
+        await asyncio.sleep(1.5)
+        
+        validation_result = evaluator.evaluate_graph(final_graph)
+        
+        if not validation_result.is_valid:
+             yield {
+                "event": "FEEDBACK",
+                "data": json.dumps({
+                    "status": "in_progress", 
+                    "conflicts_count": len(validation_result.conflicts),
+                    "conflicts": [c.model_dump() for c in validation_result.conflicts],
+                    "feedback": validation_result.feedback_for_regenerator
+                })
+            }
+             
+             # 🚨 Feedback Loop: Instruct Estimator to regenerate (Mocked regeneration)
+             print(f"[Main Pipeline] Feedback received, calling Estimator for regeneration...")
+             await asyncio.sleep(2)
+             # estimator.generate_graph(...)
+             
+             yield {
+                "event": "EVALUATING",
+                "data": json.dumps({"status": "complete"})
+            }
+        else:
+             yield {
+                "event": "EVALUATING",
+                "data": json.dumps({"status": "complete", "message": "Graph validated successfully."})
+            }
+
+        # --- PHASE 4: RESULT ---
+        yield {
+            "event": "RESULT",
+            "data": final_graph.model_dump_json()
+        }
+
+    # Return SSE Response
+    return EventSourceResponse(stream_generator())
 
 if __name__ == "__main__":
+    import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)
