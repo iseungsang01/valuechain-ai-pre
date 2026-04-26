@@ -204,7 +204,7 @@ class EvaluatorAgent(BaseAgent):
             if not edge.grounding_sources:
                 # Relax the constraint: if the Estimator guessed a non-zero value and explicitly tagged it,
                 # we allow it to pass without a hard conflict, though it has weak/no grounding.
-                if edge.is_estimated and edge.estimated_revenue_krw > 0:
+                if edge.is_estimated:
                     continue
                 
                 conflicts.append(

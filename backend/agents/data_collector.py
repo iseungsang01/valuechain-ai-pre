@@ -106,6 +106,24 @@ class DataCollectorAgent(BaseAgent):
         if not LIVE_GROUNDING or self.client is None:
             return _empty_network()
 
+        # Perform a quick web search to anchor the LLM in reality (especially DART disclosures)
+        context_text = ""
+        if DDGS is not None:
+            _safe_emit(progress_callback, "activity", {"node": target_company, "action": "실제 공급망(DART/뉴스) 사전 검색 중..."})
+            try:
+                with DDGS() as ddgs:
+                    # Search for DART disclosures and major suppliers/customers
+                    queries = [
+                        f"{target_company} 사업보고서 주요 매입처",
+                        f"{target_company} 주요 고객사 매출 비중"
+                    ]
+                    for q in queries:
+                        hits = ddgs.text(q, max_results=3)
+                        for hit in hits or []:
+                            context_text += f"Title: {hit.get('title')}\nSnippet: {hit.get('body')}\n\n"
+            except Exception as e:
+                print(f"[{self.role}] Pre-discovery search failed: {e}")
+
         _safe_emit(
             progress_callback,
             "activity",
@@ -126,7 +144,8 @@ class DataCollectorAgent(BaseAgent):
             "For example, if the target company is Hanmi Semiconductor, include key customers like SK Hynix, Micron, ASE, AmKor, JCET, Huatian, TFME, Infineon, ST Micro, PTI, Skyworks, Luxshare, JCET STATS ChipPAC Korea, ASE Korea, Amkor Korea, Samsung Electro-Mechanics, LG Innotek, Korea Circuit, SFA Semiconductor, Signetics, etc.\n"
             "Never invent counter-parties to fill the list.\n\n"
             f"TARGET: {target_company}\n"
-            f"QUARTER: {target_quarter}"
+            f"QUARTER: {target_quarter}\n\n"
+            f"REAL-WORLD SEARCH CONTEXT (Use this to anchor your response, especially prioritizing DART/사업보고서 data):\n{context_text}"
         )
         parsed = self.prompt_model_for_json(prompt, model_override=EXTRACTOR_MODEL)
         if not parsed or not isinstance(parsed, dict):

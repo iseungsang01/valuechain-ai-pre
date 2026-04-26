@@ -181,7 +181,7 @@ class EstimatorAgent(BaseAgent):
             "If exact current quarter revenue, ASP, or Q is missing or there is no direct source linking the two companies, DO NOT output 0 or drop the edge. "
             "Instead, you MUST ESTIMATE a reasonable non-zero value based on logical inference (e.g. Estimated Revenue = Q * P, where Q = Customer Volume * Adoption Rate * Supplier Share, and P = Supplier ASP). "
             "CRITICAL HANDLING OF AGGREGATE DATA: In many corporate disclosures (like DART), procurement costs are given as a total for a component category (e.g., 'Actuator total 4.2 trillion KRW') along with a list of multiple suppliers (e.g., 'Jahwa, Alps'). In this case, you MUST logically distribute that total pool among the connected suppliers using estimated vendor market shares. "
-            "If you make an estimation without strong direct grounding, set \"is_estimated\": true, and provide your logical basis and calculation formula in the \"rationale\" field. "
+            "CRITICAL: If you make ANY estimation without a strong, direct, explicitly stated number in the sources, you MUST set \"is_estimated\": true, and provide your logical basis and calculation formula in the \"rationale\" field. If you forget to set is_estimated to true, the validation will FAIL."
             "Use double-entry semantics: a single edge from A to B represents both A's "
             "revenue to B and B's procurement cost from A.\n\n"
             "Return JSON with this exact shape:\n"
