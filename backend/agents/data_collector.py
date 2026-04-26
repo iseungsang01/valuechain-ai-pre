@@ -291,6 +291,11 @@ class DataCollectorAgent(BaseAgent):
         node_set: List[str] = []
         seen: set[str] = set()
         for edge in edges:
+            # Add the edge itself as a cross-company query
+            if edge.id not in seen:
+                seen.add(edge.id)
+                node_set.append(edge.id)
+            # Also add the individual nodes
             for node in (edge.source, edge.target):
                 if node and node not in seen:
                     seen.add(node)
@@ -605,14 +610,18 @@ class DataCollectorAgent(BaseAgent):
 
         terms = _quarter_search_terms(target_quarter)
         primary_term = terms[0]
+        search_name = company_name.replace("-", " ")
         keywords = [
-            f"{company_name} {primary_term} average selling price ASP",
-            f"{company_name} {primary_term} shipment volume shipments units sold",
-            f"{company_name} {primary_term} DRAM NAND bit growth volume",
-            f"{company_name} {primary_term} revenue earnings release",
-            f"{company_name} {primary_term} financial results",
-            f"{company_name} historical ASP trend",
-            f"{company_name} ASP past 3 years",
+            f"{search_name} {primary_term} average selling price ASP",
+            f"{search_name} {primary_term} shipment volume shipments units sold",
+            f"{search_name} {primary_term} DRAM NAND bit growth volume",
+            f"{search_name} {primary_term} revenue earnings release",
+            f"{search_name} {primary_term} financial results",
+            f"{search_name} historical ASP trend",
+            f"{search_name} ASP past 3 years",
+            f"{search_name} {primary_term} supply contract",
+            f"{search_name} {primary_term} order volume",
+            f"{search_name} {primary_term} partnership agreement",
         ]
 
         results: List[dict] = []
