@@ -14,7 +14,7 @@ export default function Home() {
   const [year, setYear] = useState(2024);
   const [quarter, setQuarter] = useState<string>("Q3");
   const [selectedEdgeId, setSelectedEdgeId] = useState<string | null>(null);
-  const { status, logs, graph, error, start, stop } = useAgentStream();
+  const { status, logs, activity, graph, error, start, stop } = useAgentStream();
 
   const selectedQuarter = `${year}-${quarter}`;
   const isStreaming = status === "connecting" || status === "streaming";
@@ -52,7 +52,7 @@ export default function Home() {
           selectedEdgeId={selectedEdgeId}
           onEdgeClick={setSelectedEdgeId}
         />
-        <ThoughtLog logs={logs} isStreaming={isStreaming} />
+        <ThoughtLog logs={logs} isStreaming={isStreaming} activity={activity} />
         <div className="col-start-1 row-start-1 relative pointer-events-none overflow-hidden rounded-2xl">
           <EdgeDetailPanel edge={selectedEdge} onClose={() => setSelectedEdgeId(null)} />
         </div>

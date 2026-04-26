@@ -76,24 +76,100 @@ export type SSEEventType =
   | "FEEDBACK"
   | "RESULT";
 
+// Granular progress sub-events the backend emits while a phase is running.
+// Each carries `status: "progress"` plus an `event` discriminator.
+export type ProgressSubEvent =
+  | "network_start"
+  | "node_start"
+  | "tier_start"
+  | "tier_done"
+  | "activity"
+  | "source_extracted"
+  | "node_done"
+  | "node_failed"
+  | "network_done"
+  | "recollect_start"
+  | "heartbeat";
+
+export interface ProgressPayload {
+  status: "progress";
+  event: ProgressSubEvent;
+  // Optional contextual fields (presence depends on event type).
+  node?: string;
+  tier?: SourceTier | string;
+  action?: string;
+  query?: string;
+  url?: string;
+  metric?: MetricType;
+  value?: number;
+  unit?: string;
+  source_name?: string;
+  found?: number;
+  sources_found?: number;
+  total_sources?: number;
+  total_nodes?: number;
+  completed?: number;
+  total?: number;
+  count?: number;
+  nodes?: string[];
+  // For heartbeat
+  label?: string;
+  elapsed_seconds?: number;
+  error?: string;
+}
+
 export interface CollectingEventData {
-  status: "in_progress" | "complete";
+  status: "in_progress" | "complete" | "progress";
   message?: string;
   sources_count?: number;
+  suppliers?: string[];
+  customers?: string[];
+  elapsed_seconds?: number;
+  // Progress sub-event payload (when status === "progress")
+  event?: ProgressSubEvent;
+  node?: string;
+  tier?: string;
+  action?: string;
+  url?: string;
+  metric?: MetricType;
+  value?: number;
+  unit?: string;
+  source_name?: string;
+  found?: number;
+  sources_found?: number;
+  total_sources?: number;
+  total_nodes?: number;
+  completed?: number;
+  total?: number;
+  count?: number;
+  nodes?: string[];
+  label?: string;
+  error?: string;
 }
 
 export interface EstimatingEventData {
-  status: "in_progress" | "complete";
+  status: "in_progress" | "complete" | "progress";
   message?: string;
+  sources_count?: number;
+  edges_count?: number;
+  nodes_count?: number;
+  elapsed_seconds?: number;
+  attempt?: number;
+  event?: ProgressSubEvent;
+  label?: string;
 }
 
 export interface EvaluatingEventData {
-  status: "in_progress" | "complete";
+  status: "in_progress" | "complete" | "progress";
   message?: string;
+  attempt?: number;
+  elapsed_seconds?: number;
+  event?: ProgressSubEvent;
+  label?: string;
 }
 
 export interface FeedbackEventData {
-  status: "in_progress" | "complete";
+  status: "in_progress" | "complete" | "progress";
   conflicts_count?: number;
   conflicts?: ConflictDetail[];
   feedback?: string | null;
@@ -101,6 +177,24 @@ export interface FeedbackEventData {
   // regeneration passes (SPEC § 2.3 macro feedback loop).
   recollected_sources_count?: number;
   message?: string;
+  attempt?: number;
+  elapsed_seconds?: number;
+  // Progress sub-event payload (when status === "progress")
+  event?: ProgressSubEvent;
+  node?: string;
+  tier?: string;
+  action?: string;
+  url?: string;
+  metric?: MetricType;
+  value?: number;
+  unit?: string;
+  source_name?: string;
+  found?: number;
+  sources_found?: number;
+  completed?: number;
+  total?: number;
+  label?: string;
+  error?: string;
 }
 
 // Backend emits the entire SupplyChainGraph as the RESULT payload.
@@ -123,4 +217,26 @@ export interface AgentLogEntry {
   event: SSEEventType;
   level: LogLevel;
   message: string;
+  // When set, this entry is a granular progress event rather than a milestone.
+  // Frontend dims them and groups them under their parent phase.
+  isProgress?: boolean;
+  // For source_extracted events: lets the UI link to the citation.
+  url?: string;
+  // For node-scoped progress, lets the UI badge the entry by company.
+  node?: string;
+}
+
+// Latest "what is the agent doing right now" snapshot — drives the live
+// activity banner above the log so the user always sees motion.
+export interface CurrentActivity {
+  phase: SSEEventType;
+  label: string;
+  detail?: string;
+  node?: string;
+  // Per-phase progress: e.g. 3 of 6 nodes done.
+  completed?: number;
+  total?: number;
+  // For heartbeat-style updates, seconds since the phase started.
+  elapsedSeconds?: number;
+  startedAt: number;
 }

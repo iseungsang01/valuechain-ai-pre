@@ -1,6 +1,8 @@
 import asyncio
 import json
 import os
+import queue
+import time
 from typing import Any, Dict
 
 from dotenv import load_dotenv
@@ -60,6 +62,83 @@ def _validation_payload(result: ValidationResult, attempt: int) -> Dict[str, Any
     }
 
 
+async def _drain_progress(future: asyncio.Future, progress_queue: "queue.Queue", sse_event: str):
+    """Async-generator that yields SSE frames for every item that landed in
+    ``progress_queue`` while ``future`` is still running, then drains any
+    leftover items after the future completes. Caller awaits ``future``
+    afterwards to obtain the agent's return value."""
+    while not future.done():
+        try:
+            event_name, payload = progress_queue.get(timeout=0.05)
+        except queue.Empty:
+            await asyncio.sleep(0.02)
+            continue
+        yield {
+            "event": sse_event,
+            "data": json.dumps(
+                {"status": "progress", "event": event_name, **payload},
+                ensure_ascii=False,
+            ),
+        }
+    while True:
+        try:
+            event_name, payload = progress_queue.get_nowait()
+        except queue.Empty:
+            break
+        yield {
+            "event": sse_event,
+            "data": json.dumps(
+                {"status": "progress", "event": event_name, **payload},
+                ensure_ascii=False,
+            ),
+        }
+
+
+async def _heartbeat(
+    future: asyncio.Future,
+    sse_event: str,
+    label: str,
+    started_at: float,
+    interval: float = 2.0,
+):
+    """Emit a "still working" tick every ``interval`` seconds while a future
+    runs. Used for opaque single-LLM-call phases (Estimator, Evaluator) so
+    the UI doesn't flatline."""
+    while not future.done():
+        await asyncio.sleep(interval)
+        if future.done():
+            break
+        elapsed = round(time.time() - started_at, 1)
+        yield {
+            "event": sse_event,
+            "data": json.dumps(
+                {
+                    "status": "progress",
+                    "event": "heartbeat",
+                    "label": label,
+                    "elapsed_seconds": elapsed,
+                },
+                ensure_ascii=False,
+            ),
+        }
+
+
+def _make_progress_sink() -> "tuple[queue.Queue, callable]":
+    """Returns a thread-safe queue and a callback that pushes ``(name, payload)``
+    tuples onto it. The callback is safe to invoke from any worker thread."""
+    q: queue.Queue = queue.Queue()
+
+    def callback(event_name: str, payload: Dict[str, Any]) -> None:
+        try:
+            q.put_nowait((event_name, payload))
+        except Exception:
+            # queue is unbounded so this should not happen, but never let
+            # the agent crash because of a progress hiccup.
+            pass
+
+    return q, callback
+
+
 @app.get("/")
 def read_root():
     return {"status": "ValueChain AI Backend is running"}
@@ -89,58 +168,103 @@ async def run_analysis(req: AnalysisRequest):
                 ),
             },
         )
-        await asyncio.sleep(0.2)
+        await asyncio.sleep(0.05)
 
-        network = data_collector.discover_network(
-            req.target_node, req.target_quarter
+        # Network discovery is a single LLM call -- run it inline (fast).
+        discover_q, discover_cb = _make_progress_sink()
+        loop = asyncio.get_running_loop()
+        discover_future = loop.run_in_executor(
+            None,
+            lambda: data_collector.discover_network(
+                req.target_node, req.target_quarter, progress_callback=discover_cb
+            ),
         )
+        async for frame in _drain_progress(discover_future, discover_q, "COLLECTING"):
+            yield frame
+        network = await discover_future
 
         # --- PHASE 1: COLLECTING (network-wide) ---------------------------
+        suppliers = network.get("suppliers", []) or []
+        customers = network.get("customers", []) or []
         yield _sse(
             "COLLECTING",
             {
                 "status": "in_progress",
                 "message": (
-                    f"Collecting grounding sources for {1 + len(network.get('suppliers', []))}"
-                    f"+{len(network.get('customers', []))} nodes..."
+                    f"Collecting grounding sources for {1 + len(suppliers)}"
+                    f"+{len(customers)} nodes..."
                 ),
-                "suppliers": network.get("suppliers", []),
-                "customers": network.get("customers", []),
+                "suppliers": suppliers,
+                "customers": customers,
             },
         )
-        await asyncio.sleep(0.2)
+        await asyncio.sleep(0.05)
 
-        grounding_sources = data_collector.collect_network_data(
-            req.target_node,
-            req.target_quarter,
-            suppliers=network.get("suppliers"),
-            customers=network.get("customers"),
+        collect_q, collect_cb = _make_progress_sink()
+        collect_started = time.time()
+        collect_future = loop.run_in_executor(
+            None,
+            lambda: data_collector.collect_network_data(
+                req.target_node,
+                req.target_quarter,
+                suppliers=suppliers,
+                customers=customers,
+                progress_callback=collect_cb,
+            ),
         )
+        async for frame in _drain_progress(collect_future, collect_q, "COLLECTING"):
+            yield frame
+        grounding_sources = await collect_future
 
         yield _sse(
             "COLLECTING",
-            {"status": "complete", "sources_count": len(grounding_sources)},
+            {
+                "status": "complete",
+                "sources_count": len(grounding_sources),
+                "elapsed_seconds": round(time.time() - collect_started, 1),
+            },
         )
 
         # --- PHASE 2: ESTIMATING -------------------------------------------
+        estimate_started = time.time()
         yield _sse(
             "ESTIMATING",
             {
                 "status": "in_progress",
-                "message": "Synthesizing grounding sources into a PxQ supply chain network...",
+                "message": (
+                    f"Synthesizing PxQ network from {len(grounding_sources)} grounding source(s)..."
+                ),
+                "sources_count": len(grounding_sources),
             },
         )
-        await asyncio.sleep(0.3)
+        await asyncio.sleep(0.05)
 
-        graph = estimator.generate_graph(
-            req.target_quarter,
-            grounding_sources,
-            target_node=req.target_node,
-            suppliers=network.get("suppliers"),
-            customers=network.get("customers"),
+        # Estimator is a single long LLM call. Stream a heartbeat every ~2s
+        # so the UI shows elapsed time / "still thinking" instead of going
+        # silent. The graph build itself runs on a worker thread.
+        estimate_future = loop.run_in_executor(
+            None,
+            lambda: estimator.generate_graph(
+                req.target_quarter,
+                grounding_sources,
+                target_node=req.target_node,
+                suppliers=suppliers,
+                customers=customers,
+            ),
         )
+        async for frame in _heartbeat(estimate_future, "ESTIMATING", "Estimator LLM 추론 중", estimate_started):
+            yield frame
+        graph = await estimate_future
 
-        yield _sse("ESTIMATING", {"status": "complete"})
+        yield _sse(
+            "ESTIMATING",
+            {
+                "status": "complete",
+                "elapsed_seconds": round(time.time() - estimate_started, 1),
+                "edges_count": len(graph.edges),
+                "nodes_count": len(graph.nodes),
+            },
+        )
 
         # --- PHASE 3 + 4: EVALUATE → FEEDBACK loop -------------------------
         validation: ValidationResult | None = None
@@ -150,6 +274,7 @@ async def run_analysis(req: AnalysisRequest):
         grounding_pool: list = list(grounding_sources)
 
         while attempt <= MAX_RETRIES:
+            evaluate_started = time.time()
             yield _sse(
                 "EVALUATING",
                 {
@@ -162,9 +287,17 @@ async def run_analysis(req: AnalysisRequest):
                     ),
                 },
             )
-            await asyncio.sleep(0.3)
+            await asyncio.sleep(0.05)
 
-            validation = evaluator.evaluate_graph(graph)
+            evaluate_future = loop.run_in_executor(None, lambda: evaluator.evaluate_graph(graph))
+            async for frame in _heartbeat(
+                evaluate_future,
+                "EVALUATING",
+                f"Evaluator 일관성 검사 (attempt {attempt})",
+                evaluate_started,
+            ):
+                yield frame
+            validation = await evaluate_future
 
             if validation.is_valid:
                 yield _sse(
@@ -172,6 +305,7 @@ async def run_analysis(req: AnalysisRequest):
                     {
                         "status": "complete",
                         "attempt": attempt,
+                        "elapsed_seconds": round(time.time() - evaluate_started, 1),
                         "message": "Graph validated successfully.",
                     },
                 )
@@ -217,9 +351,19 @@ async def run_analysis(req: AnalysisRequest):
                 edges_to_recollect = [
                     e for e in graph.edges if e.id in stale_or_missing_edge_ids
                 ]
-                extra_sources = data_collector.recollect_for_edges(
-                    edges_to_recollect, req.target_quarter
+                recollect_q, recollect_cb = _make_progress_sink()
+                recollect_started = time.time()
+                recollect_future = loop.run_in_executor(
+                    None,
+                    lambda: data_collector.recollect_for_edges(
+                        edges_to_recollect,
+                        req.target_quarter,
+                        progress_callback=recollect_cb,
+                    ),
                 )
+                async for frame in _drain_progress(recollect_future, recollect_q, "FEEDBACK"):
+                    yield frame
+                extra_sources = await recollect_future
                 grounding_pool.extend(extra_sources)
                 yield _sse(
                     "FEEDBACK",
@@ -227,6 +371,7 @@ async def run_analysis(req: AnalysisRequest):
                         "status": "in_progress",
                         "attempt": attempt,
                         "recollected_sources_count": len(extra_sources),
+                        "elapsed_seconds": round(time.time() - recollect_started, 1),
                         "message": (
                             f"Re-collected {len(extra_sources)} source(s) for "
                             f"{len(edges_to_recollect)} edge(s) before regeneration."
@@ -234,11 +379,39 @@ async def run_analysis(req: AnalysisRequest):
                     },
                 )
 
-            graph = estimator.regenerate_graph(
-                graph,
-                validation.conflicts,
-                validation.feedback_for_regenerator or "",
-                extra_sources=extra_sources,
+            regenerate_started = time.time()
+            yield _sse(
+                "ESTIMATING",
+                {
+                    "status": "in_progress",
+                    "attempt": attempt,
+                    "message": f"Regenerating graph (attempt {attempt})...",
+                },
+            )
+            regenerate_future = loop.run_in_executor(
+                None,
+                lambda: estimator.regenerate_graph(
+                    graph,
+                    validation.conflicts,
+                    validation.feedback_for_regenerator or "",
+                    extra_sources=extra_sources,
+                ),
+            )
+            async for frame in _heartbeat(
+                regenerate_future,
+                "ESTIMATING",
+                f"Estimator 재생성 (attempt {attempt})",
+                regenerate_started,
+            ):
+                yield frame
+            graph = await regenerate_future
+            yield _sse(
+                "ESTIMATING",
+                {
+                    "status": "complete",
+                    "attempt": attempt,
+                    "elapsed_seconds": round(time.time() - regenerate_started, 1),
+                },
             )
 
         # --- PHASE 5: RESULT ------------------------------------------------

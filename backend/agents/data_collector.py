@@ -23,13 +23,27 @@ from __future__ import annotations
 import os
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import date
-from typing import Iterable, List, Optional, Sequence
+from typing import Any, Callable, Dict, Iterable, List, Optional, Sequence
 
 import requests
 from google import genai
 
 from .base import BaseAgent
 from .models import Edge, GroundingSource, SourceTier
+
+# Type alias: (event_name, payload) -> None. Thread-safe; called from worker
+# threads inside the ThreadPoolExecutor as well as the main thread.
+ProgressCallback = Callable[[str, Dict[str, Any]], None]
+
+
+def _safe_emit(cb: Optional[ProgressCallback], event: str, payload: Dict[str, Any]) -> None:
+    """Never let a buggy progress sink crash the collector."""
+    if cb is None:
+        return
+    try:
+        cb(event, payload)
+    except Exception as exc:  # pragma: no cover
+        print(f"[progress] callback failed for {event}: {exc}")
 
 try:
     from duckduckgo_search import DDGS  # type: ignore
@@ -79,7 +93,10 @@ class DataCollectorAgent(BaseAgent):
     # -------------------------------------------------------------------
 
     def discover_network(
-        self, target_company: str, target_quarter: str
+        self,
+        target_company: str,
+        target_quarter: str,
+        progress_callback: Optional[ProgressCallback] = None,
     ) -> dict:
         """Returns a dict ``{"suppliers": [...], "customers": [...]}``.
 
@@ -89,6 +106,11 @@ class DataCollectorAgent(BaseAgent):
         if not LIVE_GROUNDING or self.client is None:
             return _empty_network()
 
+        _safe_emit(
+            progress_callback,
+            "activity",
+            {"node": target_company, "action": "공급망 네트워크 LLM 추론"},
+        )
         prompt = (
             "You are a B2B supply chain analyst. For the target company below, "
             "list its most economically significant direct suppliers (upstream) "
@@ -121,30 +143,84 @@ class DataCollectorAgent(BaseAgent):
         target_quarter: str,
         suppliers: Optional[List[str]] = None,
         customers: Optional[List[str]] = None,
+        progress_callback: Optional[ProgressCallback] = None,
     ) -> List[GroundingSource]:
-        """Run the full cascade for every node in the discovered network."""
+        """Run the full cascade for every node in the discovered network.
+
+        Thread-safe ``progress_callback`` (if provided) receives granular
+        events such as ``node_start`` / ``tier_start`` / ``source_extracted``
+        / ``node_done`` so callers can stream live progress to the UI.
+        """
         nodes = self._dedupe([target_company, *(suppliers or []), *(customers or [])])
+        total = len(nodes)
+        _safe_emit(
+            progress_callback,
+            "network_start",
+            {"total_nodes": total, "nodes": nodes},
+        )
 
         all_sources: List[GroundingSource] = []
+        completed = 0
         with ThreadPoolExecutor(max_workers=4) as pool:
             futures = {
-                pool.submit(self.collect_quarterly_data, node, target_quarter): node
+                pool.submit(
+                    self.collect_quarterly_data,
+                    node,
+                    target_quarter,
+                    progress_callback=progress_callback,
+                ): node
                 for node in nodes
             }
             for future in as_completed(futures):
+                node = futures[future]
+                completed += 1
                 try:
-                    all_sources.extend(future.result())
+                    sources = future.result()
+                    all_sources.extend(sources)
+                    _safe_emit(
+                        progress_callback,
+                        "node_done",
+                        {
+                            "node": node,
+                            "sources_found": len(sources),
+                            "completed": completed,
+                            "total": total,
+                        },
+                    )
                 except Exception as exc:
                     print(f"[{self.role}] Network collection failed for one node: {exc}")
+                    _safe_emit(
+                        progress_callback,
+                        "node_failed",
+                        {
+                            "node": node,
+                            "error": str(exc),
+                            "completed": completed,
+                            "total": total,
+                        },
+                    )
+        _safe_emit(
+            progress_callback,
+            "network_done",
+            {"total_sources": len(all_sources), "total_nodes": total},
+        )
         return all_sources
 
     def collect_quarterly_data(
-        self, company_name: str, target_quarter: str
+        self,
+        company_name: str,
+        target_quarter: str,
+        progress_callback: Optional[ProgressCallback] = None,
     ) -> List[GroundingSource]:
         """Collects ASP / Q / Revenue / COGS data for ``company_name`` for ``target_quarter``."""
         print(
             f"[{self.role}] Collecting time-bound data for {company_name} "
             f"in {target_quarter} (live={LIVE_GROUNDING})..."
+        )
+        _safe_emit(
+            progress_callback,
+            "node_start",
+            {"node": company_name, "quarter": target_quarter},
         )
 
         if not LIVE_GROUNDING or self.client is None:
@@ -155,24 +231,40 @@ class DataCollectorAgent(BaseAgent):
 
         # Tier 1: Official disclosures (best-effort).
         try:
-            sources.extend(
-                self._collect_official_disclosures(company_name, target_quarter)
+            _safe_emit(progress_callback, "tier_start", {"node": company_name, "tier": "OFFICIAL_DISCLOSURE"})
+            tier_sources = self._collect_official_disclosures(
+                company_name, target_quarter, progress_callback=progress_callback
             )
+            sources.extend(tier_sources)
+            _safe_emit(progress_callback, "tier_done", {"node": company_name, "tier": "OFFICIAL_DISCLOSURE", "found": len(tier_sources)})
         except Exception as exc:
             print(f"[{self.role}] Disclosure step failed: {exc}")
+            _safe_emit(progress_callback, "tier_done", {"node": company_name, "tier": "OFFICIAL_DISCLOSURE", "found": 0, "error": str(exc)})
 
         # Tier 2: Company IR / homepage.
         try:
-            sources.extend(self._collect_official_ir(company_name, target_quarter))
+            _safe_emit(progress_callback, "tier_start", {"node": company_name, "tier": "OFFICIAL_IR"})
+            tier_sources = self._collect_official_ir(
+                company_name, target_quarter, progress_callback=progress_callback
+            )
+            sources.extend(tier_sources)
+            _safe_emit(progress_callback, "tier_done", {"node": company_name, "tier": "OFFICIAL_IR", "found": len(tier_sources)})
         except Exception as exc:
             print(f"[{self.role}] IR step failed: {exc}")
+            _safe_emit(progress_callback, "tier_done", {"node": company_name, "tier": "OFFICIAL_IR", "found": 0, "error": str(exc)})
 
         # Tier 3: Generic news.
         if DDGS is not None:
             try:
-                sources.extend(self._collect_news(company_name, target_quarter))
+                _safe_emit(progress_callback, "tier_start", {"node": company_name, "tier": "NEWS"})
+                tier_sources = self._collect_news(
+                    company_name, target_quarter, progress_callback=progress_callback
+                )
+                sources.extend(tier_sources)
+                _safe_emit(progress_callback, "tier_done", {"node": company_name, "tier": "NEWS", "found": len(tier_sources)})
             except Exception as exc:
                 print(f"[{self.role}] News step failed: {exc}")
+                _safe_emit(progress_callback, "tier_done", {"node": company_name, "tier": "NEWS", "found": 0, "error": str(exc)})
 
         if not sources:
             print(f"[{self.role}] No sources for {company_name} -- Evaluator will flag MISSING_GROUNDING.")
@@ -186,6 +278,7 @@ class DataCollectorAgent(BaseAgent):
         self,
         edges: Sequence[Edge],
         target_quarter: str,
+        progress_callback: Optional[ProgressCallback] = None,
     ) -> List[GroundingSource]:
         """Re-run the collection cascade only for the company pairs flagged in
         ``MISSING_GROUNDING`` / ``STALE_GROUNDING`` conflicts. Returns fresh
@@ -205,18 +298,52 @@ class DataCollectorAgent(BaseAgent):
             f"[{self.role}] Re-collecting grounding for {len(node_set)} node(s): "
             f"{', '.join(node_set)}"
         )
+        _safe_emit(
+            progress_callback,
+            "recollect_start",
+            {"total_nodes": len(node_set), "nodes": node_set},
+        )
 
         new_sources: List[GroundingSource] = []
+        completed = 0
         with ThreadPoolExecutor(max_workers=4) as pool:
             futures = {
-                pool.submit(self.collect_quarterly_data, node, target_quarter): node
+                pool.submit(
+                    self.collect_quarterly_data,
+                    node,
+                    target_quarter,
+                    progress_callback=progress_callback,
+                ): node
                 for node in node_set
             }
             for future in as_completed(futures):
+                node = futures[future]
+                completed += 1
                 try:
-                    new_sources.extend(future.result())
+                    sources = future.result()
+                    new_sources.extend(sources)
+                    _safe_emit(
+                        progress_callback,
+                        "node_done",
+                        {
+                            "node": node,
+                            "sources_found": len(sources),
+                            "completed": completed,
+                            "total": len(node_set),
+                        },
+                    )
                 except Exception as exc:
                     print(f"[{self.role}] Re-collection failed for one node: {exc}")
+                    _safe_emit(
+                        progress_callback,
+                        "node_failed",
+                        {
+                            "node": node,
+                            "error": str(exc),
+                            "completed": completed,
+                            "total": len(node_set),
+                        },
+                    )
         return new_sources
 
     # -------------------------------------------------------------------
@@ -224,7 +351,10 @@ class DataCollectorAgent(BaseAgent):
     # -------------------------------------------------------------------
 
     def _collect_official_disclosures(
-        self, company_name: str, target_quarter: str
+        self,
+        company_name: str,
+        target_quarter: str,
+        progress_callback: Optional[ProgressCallback] = None,
     ) -> List[GroundingSource]:
         if not LIVE_DISCLOSURE:
             return []
@@ -234,20 +364,25 @@ class DataCollectorAgent(BaseAgent):
         # KR (DART)
         if DART_API_KEY:
             try:
-                sources.extend(self._collect_dart(company_name, target_quarter))
+                _safe_emit(progress_callback, "activity", {"node": company_name, "action": "DART (KR) 공시 검색"})
+                sources.extend(self._collect_dart(company_name, target_quarter, progress_callback=progress_callback))
             except Exception as exc:
                 print(f"[{self.role}] DART lookup failed: {exc}")
 
         # US (EDGAR via edgartools — optional dependency)
         try:
-            sources.extend(self._collect_edgar(company_name, target_quarter))
+            _safe_emit(progress_callback, "activity", {"node": company_name, "action": "EDGAR (US) 공시 검색"})
+            sources.extend(self._collect_edgar(company_name, target_quarter, progress_callback=progress_callback))
         except Exception as exc:
             print(f"[{self.role}] EDGAR lookup failed: {exc}")
 
         return sources
 
     def _collect_dart(
-        self, company_name: str, target_quarter: str
+        self,
+        company_name: str,
+        target_quarter: str,
+        progress_callback: Optional[ProgressCallback] = None,
     ) -> List[GroundingSource]:
         """Best-effort DART OpenAPI list query for the quarter.
 
@@ -306,12 +441,16 @@ class DataCollectorAgent(BaseAgent):
                     url=url,
                     tier="OFFICIAL_DISCLOSURE",
                     article_date_hint=article_date,
+                    progress_callback=progress_callback,
                 )
             )
         return sources
 
     def _collect_edgar(
-        self, company_name: str, target_quarter: str
+        self,
+        company_name: str,
+        target_quarter: str,
+        progress_callback: Optional[ProgressCallback] = None,
     ) -> List[GroundingSource]:
         try:
             from edgar import Company, set_identity  # type: ignore
@@ -357,6 +496,7 @@ class DataCollectorAgent(BaseAgent):
                     url=str(url),
                     tier="OFFICIAL_DISCLOSURE",
                     article_date_hint=article_date,
+                    progress_callback=progress_callback,
                 )
             )
         return sources
@@ -366,10 +506,14 @@ class DataCollectorAgent(BaseAgent):
     # -------------------------------------------------------------------
 
     def _collect_official_ir(
-        self, company_name: str, target_quarter: str
+        self,
+        company_name: str,
+        target_quarter: str,
+        progress_callback: Optional[ProgressCallback] = None,
     ) -> List[GroundingSource]:
         if self.client is None:
             return []
+        _safe_emit(progress_callback, "activity", {"node": company_name, "action": "IR 페이지 URL 추론 (LLM)"})
         prompt = (
             "Return STRICT JSON with the canonical investor-relations URL for "
             "the target company's quarterly results page (or the IR landing "
@@ -389,12 +533,14 @@ class DataCollectorAgent(BaseAgent):
         if not ir_url.startswith("http"):
             return []
         label = str(parsed.get("label") or f"{company_name} IR")
+        _safe_emit(progress_callback, "activity", {"node": company_name, "action": f"IR 페이지 스크래핑: {ir_url}"})
         return self._extract_via_jina(
             company_name=company_name,
             target_quarter=target_quarter,
             title=label,
             url=ir_url,
             tier="OFFICIAL_IR",
+            progress_callback=progress_callback,
         )
 
     # -------------------------------------------------------------------
@@ -402,16 +548,31 @@ class DataCollectorAgent(BaseAgent):
     # -------------------------------------------------------------------
 
     def _collect_news(
-        self, company_name: str, target_quarter: str
+        self,
+        company_name: str,
+        target_quarter: str,
+        progress_callback: Optional[ProgressCallback] = None,
     ) -> List[GroundingSource]:
+        _safe_emit(progress_callback, "activity", {"node": company_name, "action": "뉴스/검색 (DuckDuckGo) 쿼리"})
         try:
-            results = self._search_quarterly_news(company_name, target_quarter)
+            results = self._search_quarterly_news(
+                company_name, target_quarter, progress_callback=progress_callback
+            )
         except Exception as exc:
             print(f"[{self.role}] DDGS query failed: {exc}")
             return []
         if not results:
             return []
 
+        _safe_emit(
+            progress_callback,
+            "activity",
+            {
+                "node": company_name,
+                "action": f"뉴스 {len(results)}건 본문 추출 (LLM 병렬)",
+                "count": len(results),
+            },
+        )
         sources: List[GroundingSource] = []
         with ThreadPoolExecutor(max_workers=4) as pool:
             futures = {
@@ -420,6 +581,7 @@ class DataCollectorAgent(BaseAgent):
                     company_name,
                     target_quarter,
                     result,
+                    progress_callback,
                 ): result
                 for result in results
             }
@@ -431,7 +593,10 @@ class DataCollectorAgent(BaseAgent):
         return sources
 
     def _search_quarterly_news(
-        self, company_name: str, target_quarter: str
+        self,
+        company_name: str,
+        target_quarter: str,
+        progress_callback: Optional[ProgressCallback] = None,
     ) -> List[dict]:
         if DDGS is None:  # pragma: no cover
             return []
@@ -449,6 +614,7 @@ class DataCollectorAgent(BaseAgent):
         seen_urls: set[str] = set()
         with DDGS() as ddgs:
             for query in keywords:
+                _safe_emit(progress_callback, "activity", {"node": company_name, "action": f'검색: "{query}"'})
                 try:
                     hits = ddgs.text(query, max_results=SEARCH_MAX_RESULTS)
                 except Exception as exc:
@@ -490,9 +656,19 @@ class DataCollectorAgent(BaseAgent):
         company_name: str,
         target_quarter: str,
         search_result: dict,
+        progress_callback: Optional[ProgressCallback] = None,
     ) -> List[GroundingSource]:
         snippet = (search_result.get("snippet") or "").strip()
         if len(snippet) < 200:
+            _safe_emit(
+                progress_callback,
+                "activity",
+                {
+                    "node": company_name,
+                    "action": f"본문 스크래핑: {search_result.get('title', '')[:60]}",
+                    "url": search_result["url"],
+                },
+            )
             scraped = self._scrape_with_jina(search_result["url"])
             if scraped:
                 snippet = scraped
@@ -507,6 +683,7 @@ class DataCollectorAgent(BaseAgent):
             url=search_result["url"],
             tier="NEWS",
             preloaded_snippet=snippet,
+            progress_callback=progress_callback,
         )
 
     def _extract_via_jina(
@@ -519,6 +696,7 @@ class DataCollectorAgent(BaseAgent):
         tier: SourceTier,
         article_date_hint: Optional[date] = None,
         preloaded_snippet: Optional[str] = None,
+        progress_callback: Optional[ProgressCallback] = None,
     ) -> List[GroundingSource]:
         snippet = preloaded_snippet or self._scrape_with_jina(url)
         if not snippet:
@@ -586,6 +764,19 @@ class DataCollectorAgent(BaseAgent):
                         article_date=article_date_value,
                         tier=tier,
                     )
+                )
+                _safe_emit(
+                    progress_callback,
+                    "source_extracted",
+                    {
+                        "node": company_name,
+                        "tier": tier,
+                        "metric": metric_type,
+                        "value": value,
+                        "unit": unit,
+                        "source_name": source_name[:120],
+                        "url": url,
+                    },
                 )
             except Exception as exc:
                 print(f"[{self.role}] Skipping malformed extraction item: {exc}")
