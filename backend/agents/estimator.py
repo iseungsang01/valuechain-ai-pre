@@ -87,6 +87,8 @@ def _skeleton_graph(
                         source=s,
                         target=target_node,
                         estimated_revenue_krw=0.0,
+                        is_estimated=True,
+                        rationale="System fallback: explicit grounding missing."
                     )
                 )
         for c in customers:
@@ -97,6 +99,8 @@ def _skeleton_graph(
                         source=target_node,
                         target=c,
                         estimated_revenue_krw=0.0,
+                        is_estimated=True,
+                        rationale="System fallback: explicit grounding missing."
                     )
                 )
 
