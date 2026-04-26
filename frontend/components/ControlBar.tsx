@@ -73,7 +73,7 @@ export function ControlBar({
           <input
             value={targetNode}
             onChange={(event) => onTargetNodeChange(event.target.value)}
-            placeholder="e.g. SK Hynix"
+            placeholder="e.g. 한미반도체"
             disabled={isBusy}
             className="h-9 w-48 rounded-lg border border-white/10 bg-white/5 px-3 text-sm text-zinc-100 outline-none transition focus:border-emerald-400/60 focus:ring-2 focus:ring-emerald-400/20 disabled:cursor-not-allowed disabled:opacity-60"
           />

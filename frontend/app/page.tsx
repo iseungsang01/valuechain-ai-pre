@@ -10,7 +10,7 @@ import { useAgentStream } from "@/hooks/useAgentStream";
 const QUARTERS = ["Q1", "Q2", "Q3", "Q4"] as const;
 
 export default function Home() {
-  const [targetNode, setTargetNode] = useState("SK Hynix");
+  const [targetNode, setTargetNode] = useState("한미반도체");
   const [year, setYear] = useState(2024);
   const [quarter, setQuarter] = useState<string>("Q3");
   const [selectedEdgeId, setSelectedEdgeId] = useState<string | null>(null);

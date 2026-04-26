@@ -37,7 +37,7 @@ class Edge(BaseModel):
 
 
 class Node(BaseModel):
-    id: str  # "SK Hynix"
+    id: str  # "한미반도체"
     name: str
     type: Literal["TARGET", "SUPPLIER", "CUSTOMER"]
     reported_cogs_krw: Optional[float] = None  # Evaluator uses this

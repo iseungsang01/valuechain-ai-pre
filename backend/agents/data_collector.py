@@ -60,7 +60,7 @@ DART_API_KEY = os.getenv("DART_API_KEY")
 JINA_BASE_URL = "https://r.jina.ai/"
 JINA_TIMEOUT_SECONDS = 15
 SEARCH_MAX_RESULTS = 5
-SNIPPET_MAX_CHARS = 4000
+SNIPPET_MAX_CHARS = 30000
 
 
 def _quarter_search_terms(target_quarter: str) -> List[str]:
@@ -72,10 +72,10 @@ def _quarter_search_terms(target_quarter: str) -> List[str]:
     except Exception:
         return [target_quarter]
     return [
-        f"{year} {quarter}분기",
+        f"Q{quarter} {year}",
         f"{year} Q{quarter}",
         f"{year}-Q{quarter}",
-        f"{year}년 {quarter}분기",
+        f"{year} {quarter}분기",
     ]
 
 
@@ -672,7 +672,7 @@ class DataCollectorAgent(BaseAgent):
         progress_callback: Optional[ProgressCallback] = None,
     ) -> List[GroundingSource]:
         snippet = (search_result.get("snippet") or "").strip()
-        if len(snippet) < 200:
+        if len(snippet) < 2000:
             _safe_emit(
                 progress_callback,
                 "activity",
@@ -723,6 +723,7 @@ class DataCollectorAgent(BaseAgent):
             '  "sources": [\n'
             "    {\n"
             '      "metric_type": "ASP" | "Q" | "REVENUE" | "COGS",\n'
+            '      // Note: "Q" means Quantity of Units Sold, not Quarter or Profit.\n'
             '      "value": <number>,\n'
             '      "unit": <string, e.g. USD, KRW, KRW_HUNDRED_MILLION, units>,\n'
             '      "source_name": <short human label>,\n'
